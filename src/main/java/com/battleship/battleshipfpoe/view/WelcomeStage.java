@@ -16,7 +16,7 @@ public class WelcomeStage extends Stage {
     public WelcomeStage() {
         super();
         FXMLLoader loader = new FXMLLoader(
-                getClass().getResource("/com/example/planeserializablefiles/welcome-view.fxml"));
+                getClass().getResource("/com/battleship/battleshipfpoe/welcome-view.fxml"));
         try{
             root = loader.load();
             welcomeController = loader.getController();
@@ -25,7 +25,7 @@ public class WelcomeStage extends Stage {
         }
         Scene scene = new Scene(root);
         setScene(scene);
-        setTitle("Sopa de letras");
+        setTitle("Batalla Naval");
         setResizable(false);
         initStyle(StageStyle.UNDECORATED);
         show();
