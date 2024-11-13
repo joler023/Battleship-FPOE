@@ -1,0 +1,11 @@
+.exit-button{
+    -fx-background-color: #ff367c;
+    -fx-text-fill: #fff;
+    -fx-font-family: "Consolas";
+    -fx-font-weight: bold;
+    -fx-cursor: "hand";
+}
+
+.exit-button:hover{
+    -fx-background-color: #f3105a;
+}
