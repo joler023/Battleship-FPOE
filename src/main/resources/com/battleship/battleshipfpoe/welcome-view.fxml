@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
@@ -7,15 +8,17 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-
-<BorderPane id="borderPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="396.0" prefWidth="599.0" styleClass="borderPane" stylesheets="@css/styles-welcome.css" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1">
+<BorderPane id="borderPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="396.0" prefWidth="599.0" styleClass="borderPane" stylesheets="@css/styles-welcome.css" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.battleship.battleshipfpoe.controller.WelcomeController">
    <right>
-      <VBox alignment="CENTER" prefHeight="396.0" prefWidth="178.0" spacing="20.0" BorderPane.alignment="CENTER">
+      <VBox alignment="CENTER" prefHeight="296.0" prefWidth="178.0" spacing="20.0" BorderPane.alignment="CENTER">
          <children>
-            <Button mnemonicParsing="false" prefHeight="35.0" prefWidth="127.0" styleClass="buttons" stylesheets="@css/styles-welcome.css" text="Nuevo Juego">
+            <Button mnemonicParsing="false" onAction="#handleClickPlay" prefHeight="35.0" prefWidth="127.0" styleClass="buttons" stylesheets="@css/styles-welcome.css" text="Nuevo Juego">
                <cursor>
                   <Cursor fx:constant="HAND" />
                </cursor>
+               <VBox.margin>
+                  <Insets bottom="10.0" />
+               </VBox.margin>
             </Button>
             <Button mnemonicParsing="false" prefHeight="33.0" prefWidth="125.0" styleClass="buttons" stylesheets="@css/styles-welcome.css" text="Continuar">
                <cursor>
