@@ -2,9 +2,11 @@ package com.battleship.battleshipfpoe.view;
 
 import com.battleship.battleshipfpoe.controller.GameController;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
@@ -15,6 +17,9 @@ public class GameStage extends Stage {
     private Parent root;
     public GameStage(){
         super();
+        // Obtener los límites visibles de la pantalla
+        Rectangle2D visualBounds = Screen.getPrimary().getVisualBounds();
+
         FXMLLoader loader = new FXMLLoader(
                 getClass().getResource("/com/battleship/battleshipfpoe/game-view.fxml"));
         try{
@@ -23,7 +28,12 @@ public class GameStage extends Stage {
         } catch (IOException e){
             e.printStackTrace();
         }
-        Scene scene = new Scene(root);
+        Scene scene = new Scene(root, visualBounds.getWidth(), visualBounds.getHeight());
+        setX(visualBounds.getMinX());
+        setY(visualBounds.getMinY());
+        setWidth(visualBounds.getWidth());
+        setHeight(visualBounds.getHeight());
+
         setScene(scene);
 
         setTitle("Batalla Naval");
