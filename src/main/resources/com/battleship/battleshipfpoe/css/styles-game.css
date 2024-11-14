@@ -1,0 +1,5 @@
+.background-Game{
+    -fx-background-image: url('../images/background-game.jpg');
+    -fx-background-size: cover;
+    -fx-background-repeat: no-repeat;
+}

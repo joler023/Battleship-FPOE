@@ -12,4 +12,9 @@ public class WelcomeController {
         WelcomeStage.deleteInstance();
         GameStage.getInstance();
     }
+
+    @FXML
+    public void handleClickExit(ActionEvent event) {
+        WelcomeStage.deleteInstance();
+    }
 }
