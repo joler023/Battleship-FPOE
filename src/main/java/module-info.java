@@ -1,6 +1,7 @@
 module com.battleship.battleshipfpoe {
     requires javafx.controls;
     requires javafx.fxml;
+    requires java.desktop;
 
 
     opens com.battleship.battleshipfpoe to javafx.fxml;

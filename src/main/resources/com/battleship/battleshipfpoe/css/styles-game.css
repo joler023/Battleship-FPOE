@@ -22,3 +22,7 @@
 .label-Machine{
     -fx-border-color: #fd0724;
 }
+
+.gridPane-Game{
+    -fx-background-color: rgba(169, 240, 247, 0.7)
+}
