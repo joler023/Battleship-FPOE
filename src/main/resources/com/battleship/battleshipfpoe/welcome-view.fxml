@@ -11,13 +11,23 @@
 <?import javafx.scene.text.Font?>
 
 <BorderPane id="borderPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1400.0" styleClass="borderPane" stylesheets="@css/styles-welcome.css" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.battleship.battleshipfpoe.controller.WelcomeController">
-   <right>
+   <top>
+      <Label id="title" alignment="CENTER" prefHeight="119.0" prefWidth="763.0" text="BATALLA NAVAL" textFill="WHITE" BorderPane.alignment="CENTER">
+         <font>
+            <Font name="Bodoni MT" size="85.0" />
+         </font>
+      </Label>
+   </top>
+   <center>
       <VBox alignment="TOP_CENTER" prefHeight="425.0" prefWidth="502.0" spacing="60.0" BorderPane.alignment="CENTER">
          <children>
             <Label text="MENÚ PRINCIPAL" textFill="WHITE">
                <font>
                   <Font name="Franklin Gothic Demi Cond" size="42.0" />
-               </font></Label>
+               </font>
+               <VBox.margin>
+                  <Insets top="100.0" />
+               </VBox.margin></Label>
             <Button mnemonicParsing="false" onAction="#handleClickPlay" prefHeight="60.0" prefWidth="300.0" styleClass="buttons" stylesheets="@css/styles-welcome.css" text="NUEVO JUEGO" VBox.vgrow="ALWAYS">
                <cursor>
                   <Cursor fx:constant="HAND" />
@@ -68,12 +78,5 @@
             </Button>
          </children>
       </VBox>
-   </right>
-   <top>
-      <Label id="title" alignment="CENTER" prefHeight="119.0" prefWidth="763.0" text="BATALLA NAVAL" textFill="WHITE" BorderPane.alignment="CENTER">
-         <font>
-            <Font name="Bodoni MT" size="74.0" />
-         </font>
-      </Label>
-   </top>
+   </center>
 </BorderPane>
