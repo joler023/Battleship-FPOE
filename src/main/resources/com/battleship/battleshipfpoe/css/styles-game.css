@@ -26,3 +26,8 @@
 .gridPane-Game{
     -fx-background-color: rgba(169, 240, 247, 0.7)
 }
+
+.button-Entered{
+    -fx-border-color: #ec3333;
+    -fx-border-width: 2;
+}
