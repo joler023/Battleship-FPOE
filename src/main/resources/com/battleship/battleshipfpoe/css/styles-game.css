@@ -3,3 +3,31 @@
     -fx-background-size: cover;
     -fx-background-repeat: no-repeat;
 }
+.button-show{
+    -fx-background-color: transparent;
+}
+
+.label-Game{
+    -fx-background-color: #000;
+    -fx-font-family: "Georgia","";
+    -fx-font-size: 15;
+    -fx-text-fill: #fff;
+    -fx-border-radius: 8;
+    -fx-background-radius: 8;
+    -fx-border-width: 2;
+    -fx-border-color: #07dcfd;
+    -fx-padding: 3;
+}
+
+.label-Machine{
+    -fx-border-color: #fd0724;
+}
+
+.gridPane-Game{
+    -fx-background-color: rgba(169, 240, 247, 0.7)
+}
+
+.button-Entered{
+    -fx-border-color: #ec3333;
+    -fx-border-width: 2;
+}
