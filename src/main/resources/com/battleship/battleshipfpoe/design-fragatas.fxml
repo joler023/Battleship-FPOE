@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.shape.Circle?>
+<?import javafx.scene.shape.Line?>
+<?import javafx.scene.shape.Polygon?>
+<?import javafx.scene.shape.Rectangle?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="30.0" prefWidth="30.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <Polygon fill="#006400" layoutY="-7.0" points="5.0, 25.0, 25.0, 25.0, 20.0, 30.0, 10.0, 30.0" stroke="BLACK" strokeType="INSIDE" />
+      <Rectangle fill="#B0C4DE" height="5.0" layoutX="6.0" layoutY="15.0" width="18.0" />
+      <Rectangle fill="#4682B4" height="3.0" layoutX="7.0" layoutY="16.0" width="3.0" />
+      <Rectangle fill="#4682B4" height="3.0" layoutX="11.0" layoutY="16.0" width="3.0" />
+      <Rectangle fill="#4682B4" height="3.0" layoutX="15.0" layoutY="16.0" width="3.0" />
+      <Line endX="18.0" endY="16.0" startX="7.0" startY="16.0" stroke="BLACK" />
+      <Rectangle fill="#B0C4DE" height="3.0" layoutX="16.0" layoutY="10.0" width="3.0" />
+      <Line endX="17.5" endY="6.0" startX="17.5" startY="10.0" stroke="BLACK" />
+      <Circle fill="GRAY" layoutX="17.5" layoutY="9.0" radius="0.8" />
+      <Rectangle fill="#B0C4DE" height="2.0" layoutX="5.0" layoutY="15.0" width="4.0" />
+      <Line endX="2.0" endY="14.0" startX="4.0" startY="15.0" stroke="BLACK" strokeWidth="0.5" />
+      <Rectangle fill="#B0C4DE" height="3.0" layoutX="16.0" layoutY="13.0" width="3.0" />
+   </children>
+</AnchorPane>
