@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.shape.Arc?>
+<?import javafx.scene.shape.Line?>
+<?import javafx.scene.shape.Polyline?>
+<?import javafx.scene.shape.Rectangle?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="30.0" prefWidth="110.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1">
+    <children>
+
+        <Rectangle arcHeight="10.0" arcWidth="10.0" fill="BLACK" height="16.0" layoutX="9.0" layoutY="10.0" width="90.0" />
+        <Rectangle fill="RED" height="10.0" layoutX="8.0" layoutY="18.0" style="-fx-arc-height: 30; -fx-arc-width: 30;" width="90.0" />
+        <Arc centerX="10.0" centerY="20.0" fill="BLACK" layoutX="7.0" layoutY="-2.0" length="180.0" radiusX="15.0" radiusY="8.0" startAngle="90.0" style="-fx-stroke: black;" />
+        <Rectangle fill="BLACK" height="10.0" layoutX="30.0" layoutY="0.0" width="20.0" />
+        <Rectangle fill="WHITE" height="2.0" layoutX="35.0" layoutY="2.0" width="10.0" />
+        <Rectangle fill="WHITE" height="2.0" layoutX="35.0" layoutY="5.0" width="10.0" />
+        <Line endX="40.0" endY="-5.0" startX="40.0" startY="0.0" stroke="BLACK" strokeWidth="2.0" />
+        <Rectangle fill="WHITE" height="3.0" layoutX="20.0" layoutY="15.0" width="5.0" />
+        <Rectangle fill="WHITE" height="3.0" layoutX="30.0" layoutY="15.0" width="5.0" />
+        <Rectangle fill="WHITE" height="3.0" layoutX="40.0" layoutY="15.0" width="5.0" />
+        <Rectangle fill="WHITE" height="3.0" layoutX="50.0" layoutY="15.0" width="5.0" />
+        <Rectangle fill="WHITE" height="3.0" layoutX="60.0" layoutY="15.0" width="5.0" />
+        <Rectangle fill="WHITE" height="3.0" layoutX="70.0" layoutY="15.0" width="5.0" />
+        <Rectangle fill="WHITE" height="3.0" layoutX="80.0" layoutY="15.0" width="5.0" />
+      <Polyline fill="#736969" layoutX="105.0" points="-12.799957275390625, 18.399993896484375, 1.52587890625E-5, 10.399993896484375, 3.0517578125E-5, 25.0, -12.799972534179688, 18.399993896484375" stroke="#00000097" strokeType="INSIDE" />
+      <Rectangle fill="#3C3F48" height="10.0" layoutX="53.0" layoutY="3.0" width="3.0" />
+    </children>
+</AnchorPane>

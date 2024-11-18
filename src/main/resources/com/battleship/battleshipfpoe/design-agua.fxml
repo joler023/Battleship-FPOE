@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.shape.Polygon?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="30.0" prefWidth="30.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <Polygon fill="RED" points="5.0,4.0, 8.0,2.0, 27.0,23.0, 24.0,25.0" />
+      <Polygon fill="RED" points="27.0,4.0, 24.0,2.0, 5.0,23.0, 8.0,25.0" />
+      <Polygon fill="DARKRED" points="5.0,4.0, 7.5,5.5, 26.0,24.0, 24.0,23.0" />
+      <Polygon fill="DARKRED" points="27.0,4.0, 25.5,5.5, 6.0,24.0, 8.0,23.0" />
+   </children>
+</AnchorPane>
