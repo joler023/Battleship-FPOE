@@ -2,6 +2,7 @@ package com.battleship.battleshipfpoe.model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class PlayerBoard {
     private List<List<Integer>> matrixPlayer;
@@ -23,6 +24,8 @@ public class PlayerBoard {
             matrixPlayer.add(row);
         }
     }
+
+
 
     public List<List<Integer>> getMatrixPlayer() {
         return matrixPlayer;

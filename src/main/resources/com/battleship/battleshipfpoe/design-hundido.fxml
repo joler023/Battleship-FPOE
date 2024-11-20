@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.shape.Circle?>
+<?import javafx.scene.shape.Polygon?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="30.0" prefWidth="30.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <Polygon fill="RED" points="15.0,0.0, 10.0,8.0, 8.0,12.0, 10.0,20.0, 5.0,24.0, 8.0,28.0, 15.0,30.0, 22.0,28.0, 25.0,24.0, 20.0,20.0, 22.0,12.0, 20.0,8.0" />
+      <Polygon fill="ORANGE" points="15.0,3.0, 12.0,10.0, 10.0,14.0, 12.0,20.0, 8.0,24.0, 12.0,26.0, 15.0,27.0, 18.0,26.0, 22.0,24.0, 18.0,20.0, 20.0,14.0, 18.0,10.0" />
+      <Polygon fill="YELLOW" points="15.0,6.0, 13.0,12.0, 12.0,18.0, 15.0,22.0, 18.0,18.0, 17.0,12.0" />
+      <Circle fill="YELLOW" layoutX="5.0" layoutY="10.0" radius="1.5" />
+      <Circle fill="YELLOW" layoutX="25.0" layoutY="10.0" radius="1.5" />
+      <Circle fill="ORANGE" layoutX="4.0" layoutY="15.0" radius="1.0" />
+      <Circle fill="ORANGE" layoutX="26.0" layoutY="15.0" radius="1.0" />
+      <Circle fill="RED" layoutX="6.0" layoutY="20.0" radius="0.8" />
+      <Circle fill="RED" layoutX="24.0" layoutY="20.0" radius="0.8" />
+   </children>
+</AnchorPane>
