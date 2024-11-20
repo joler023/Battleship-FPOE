@@ -15,6 +15,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Pane;
 
 public class GameController {
 
@@ -27,6 +28,14 @@ public class GameController {
 
     @FXML
     private ImageView imageShow;
+
+    @FXML
+    private Pane water;
+    @FXML
+    private Pane bomb;
+    @FXML
+    private Pane fire;
+
     @FXML
     private Label labelShow; // Show text: hide/show
 
@@ -40,6 +49,7 @@ public class GameController {
     private Frigate frigate;
     private BombTouch bombTouch;
     private WaterShot waterShot;
+    private ShipSunk shipSunk;
     private PlayerBoard playerBoard;
     private MachineBoard machineBoard;
 
@@ -50,6 +60,7 @@ public class GameController {
         machineBoard = new MachineBoard();
         draggableMaker = new DraggableMaker();
         aircraftCarrier = new AircraftCarrier();
+        shipSunk = new ShipSunk();
         frigate = new Frigate();
         bombTouch = new BombTouch();
         waterShot = new WaterShot();
@@ -61,11 +72,21 @@ public class GameController {
         createTableMachine();
         createTablePlayer();
         positionShips();
+        positionShapes();
     }
 
     public void positionShips(){
         positionAirCraftCarrier();
         positionSubmarine();
+    }
+
+    public void positionShapes(){
+        Group group = waterShot.getWaterShot();
+        water.getChildren().add(group);
+        group = bombTouch.getBombTouch();
+        bomb.getChildren().add(group);
+        group = shipSunk.getShipSunk();
+        fire.getChildren().add(group);
     }
 
     public void positionAirCraftCarrier(){

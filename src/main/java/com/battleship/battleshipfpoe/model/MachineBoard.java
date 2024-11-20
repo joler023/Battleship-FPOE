@@ -76,10 +76,23 @@ public class MachineBoard {
 
     // Se coloca los barcos en la matriz
     public void placeShips() {
+        // Portaviones
         placeShip(4); // Coloca el primer portaviones (4 casillas)
-        placeShip(4); // Coloca el segundo portaviones (4 casillas)
-        placeShip(3); // Coloca el primer submarino (3 casillas)
-        placeShip(3); // Coloca el segundo submarino (3 casillas)
+
+        // Submarino
+        placeShip(3);
+        placeShip(3);
+
+        // Destructor
+        placeShip(2); // Coloca el segundo submarino (3 casillas)
+        placeShip(2); // Coloca el segundo submarino (3 casillas)
+        placeShip(2); // Coloca el segundo submarino (3 casillas)
+
+        //Fragata
+        placeShip(1); // Coloca el segundo submarino (3 casillas)
+        placeShip(1); // Coloca el segundo submarino (3 casillas)
+        placeShip(1); // Coloca el segundo submarino (3 casillas)
+        placeShip(1); // Coloca el segundo submarino (3 casillas)
     }
 
     public List<List<Integer>> getMatrixMachine() {
