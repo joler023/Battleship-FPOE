@@ -6,9 +6,9 @@ import javafx.scene.shape.Circle;
 import javafx.scene.shape.Polygon;
 
 public class ShipSunk {
-    private Group shipSunk;
 
-    public ShipSunk() {
+    public Group getShipSunk() {
+        Group group = new Group();
         // Crear el primer polígono rojo
         Polygon polygon1 = new Polygon();
         polygon1.getPoints().addAll(15.0, 0.0, 10.0, 8.0, 8.0, 12.0, 10.0, 20.0, 5.0, 24.0, 8.0, 28.0, 15.0, 30.0, 22.0, 28.0, 25.0, 24.0, 20.0, 20.0, 22.0, 12.0, 20.0, 8.0);
@@ -36,11 +36,7 @@ public class ShipSunk {
         Circle circle5 = new Circle(6.0, 20.0, 0.8, Color.RED);
         Circle circle6 = new Circle(24.0, 20.0, 0.8, Color.RED);
 
-        // Agrupar todos los elementos
-        shipSunk = new Group(polygon1, polygon2, polygon3, circle1, circle2, circle3, circle4, circle5, circle6);
-    }
-
-    public Group getShipSunk() {
-        return shipSunk;
+        group.getChildren().addAll(polygon1, polygon2, polygon3, circle1, circle2, circle3, circle4, circle5, circle6);
+        return group;
     }
 }

@@ -5,9 +5,9 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;
 
 public class WaterShot {
-    private Group waterShot;
 
-    public WaterShot() {
+    public Group getWaterShot() {
+        Group group = new Group();
         // Crear el primer polígono rojo
         Polygon polygon1 = new Polygon();
         polygon1.getPoints().addAll(5.0, 4.0, 8.0, 2.0, 27.0, 23.0, 24.0, 25.0);
@@ -28,11 +28,9 @@ public class WaterShot {
         polygon4.getPoints().addAll(27.0, 4.0, 25.5, 5.5, 6.0, 24.0, 8.0, 23.0);
         polygon4.setFill(Color.DARKRED);
 
+        group.getChildren().addAll(polygon1, polygon2, polygon3, polygon4);
         // Agregar todos los polígonos al grupo
-        waterShot = new Group(polygon1, polygon2, polygon3, polygon4);
+        return group;
     }
 
-    public Group getWaterShot() {
-        return waterShot;
-    }
 }

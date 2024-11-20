@@ -9,7 +9,8 @@ import javafx.scene.shape.Polygon;
 public class BombTouch {
     private Group bombTouch;
 
-    public BombTouch() {
+    public Group getBombTouch() {
+        Group group = new Group();
         // Crear el primer círculo negro
         Circle circle1 = new Circle(15.0, 15.5, 12.0, Color.BLACK);
 
@@ -58,10 +59,7 @@ public class BombTouch {
         triangle3.setFill(Color.YELLOW);
 
         // Agregar todos los elementos al grupo
-        bombTouch = new Group(circle1, circle2, circle3, circle4, triangle1, line1, line2, line3, line4, triangle2, triangle3);
-    }
-
-    public Group getBombTouch() {
-        return bombTouch;
+        group.getChildren().addAll(circle1, circle2, circle3, circle4, triangle1, line1, line2, line3, line4, triangle2, triangle3);
+        return group;
     }
 }
