@@ -13,6 +13,7 @@
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
@@ -249,11 +250,11 @@
                               <Font name="Century Gothic" size="12.0" />
                            </font>
                         </Label>
-                        <ImageView fitHeight="45.0" fitWidth="45.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@images/icon-x.png" />
-                           </image>
-                        </ImageView>
+                        <Pane fx:id="water" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="50.0" prefWidth="50.0">
+                           <VBox.margin>
+                              <Insets left="15.0" />
+                           </VBox.margin>
+                        </Pane>
                         <Label text="AGUA" textFill="WHITE">
                            <VBox.margin>
                               <Insets bottom="40.0" />
@@ -262,11 +263,11 @@
                               <Font name="Century Gothic" size="12.0" />
                            </font>
                         </Label>
-                        <ImageView fitHeight="45.0" fitWidth="45.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@images/icon-bomb.png" />
-                           </image>
-                        </ImageView>
+                        <Pane fx:id="bomb" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="50.0" prefWidth="50.0">
+                           <VBox.margin>
+                              <Insets left="15.0" />
+                           </VBox.margin>
+                        </Pane>
                         <Label text="TOCADO" textFill="WHITE">
                            <VBox.margin>
                               <Insets bottom="40.0" />
@@ -275,11 +276,11 @@
                               <Font name="Century Gothic" size="12.0" />
                            </font>
                         </Label>
-                        <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@images/icon-fire.png" />
-                           </image>
-                        </ImageView>
+                        <Pane fx:id="fire" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="50.0" prefWidth="50.0">
+                           <VBox.margin>
+                              <Insets left="15.0" />
+                           </VBox.margin>
+                        </Pane>
                         <Label text="HUNDIDO" textFill="WHITE">
                            <font>
                               <Font name="Century Gothic" size="12.0" />
