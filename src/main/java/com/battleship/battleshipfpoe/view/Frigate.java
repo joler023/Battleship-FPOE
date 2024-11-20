@@ -8,9 +8,9 @@ import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Rectangle;
 
 public class Frigate {
-    private Group frigate;
 
-    public Frigate() {
+    public Group getFrigate() {
+        Group group = new Group();
         // Crear el Polygon
         Polygon polygon = new Polygon();
         polygon.getPoints().addAll(5.0, 25.0, 25.0, 25.0, 20.0, 30.0, 10.0, 30.0);
@@ -57,11 +57,7 @@ public class Frigate {
         Circle circle = new Circle(17.5, 9.0, 0.8);
         circle.setFill(Color.GRAY);
 
-
-        frigate = new Group(polygon, rect1, rect2, rect3, rect4, line1, rect5, rect6, rect7, line2, circle, line3);
-    }
-
-    public Group getFrigate() {
-        return frigate;
+        group.getChildren().addAll(polygon, rect1, rect2, rect3, rect4, line1, rect5, rect6, rect7, line2, circle, line3);
+        return group;
     }
 }
