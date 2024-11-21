@@ -79,7 +79,7 @@ public class GameController {
 
     @FXML
     public void initialize(){
-        createTablePlayer();
+        //createTablePlayer();
         positionShips();
         positionShapes();
     }
@@ -94,9 +94,24 @@ public class GameController {
         textFieldName.setText(player.getNickname());
         createTableMachine();
 
-//        do{
-//
-//        }while(playerPlay() && machinePlay());
+    }
+
+    public void setBoatsList(List<Boat> boatsList) {
+        // Iterate over each boat in the list
+        for (Boat boat : boatsList) {
+            // Obtener posición y orientación
+            int[] position = boat.getPosition();
+            int row = position[0];
+            int col = position[1];
+            boolean isHorizontal = boat.isHorizontal();
+
+            // Colocar el barco en el tablero
+            System.out.println("Colocando barco " +  boat + " en fila: " + row + ", columna: " + col);
+            playerBoard.placeShip(row, col, boat.getLength(), isHorizontal);
+        }
+
+        playerBoard.printMatrix();
+        createTablePlayer();
     }
 
     public boolean playerPlay(){
