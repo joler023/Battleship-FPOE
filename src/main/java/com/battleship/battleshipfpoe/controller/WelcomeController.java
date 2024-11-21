@@ -2,6 +2,7 @@ package com.battleship.battleshipfpoe.controller;
 
 import com.battleship.battleshipfpoe.model.*;
 import com.battleship.battleshipfpoe.view.GameStage;
+import com.battleship.battleshipfpoe.view.PreparationStage;
 import com.battleship.battleshipfpoe.view.WelcomeStage;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -12,18 +13,14 @@ public class WelcomeController {
     private GameController gameController;
 
     public WelcomeController() {
-        serializableFileHandler = new SerializableFileHandler();
-        planeTextFileHandler = new PlaneTextFileHandler();
-        gameController = new GameController();
+
     }
 
     @FXML
     public void handleClickPlay(ActionEvent event) {
-        Player player = new Player();
-        MachineBoard machineBoard = new MachineBoard();
-
         WelcomeStage.deleteInstance();
-        GameStage.getInstance().getGameController().setPlayer(player, machineBoard);
+        //GameStage.getInstance();
+        PreparationStage.getInstance();
     }
 
     @FXML
