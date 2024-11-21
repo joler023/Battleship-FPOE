@@ -32,6 +32,8 @@ public class PreparationController implements Initializable {
     private PlaneTextFileHandler planeTextFileHandler;
     private GameController gameController;
 
+    private List<Boat> boats;
+
 
     @FXML
     private Pane BoatPane;
@@ -280,6 +282,12 @@ public class PreparationController implements Initializable {
         }
     }
 
+
+    public void addBoat(Boat boat) {
+        boats.add(boat);
+    }
+
+
     private boolean isValidHorizontalPlacement(int col, int row, int boatSize) {
         // Verificar que el barco no se desborde en la dirección horizontal
         return col >= 0 && col + boatSize <= boardHandler.getGridSize();
@@ -312,35 +320,19 @@ public class PreparationController implements Initializable {
 
 
     public void handleNextButton(ActionEvent event) {
-        /*
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/battleshipfpoe/fxml/game-view.fxml"));
-            Parent root = loader.load();
-
-            GameController gameController = loader.getController();
+            Player player = new Player();
+            MachineBoard machineBoard = new MachineBoard();
 
             // Pass the list of Boat objects to the GameController
             List<Boat> boatsList = new ArrayList<>(boatPositionsMap.keySet());
 
+
+            GameController gameController1 = GameStage.getInstance().getGameController();
+            PreparationStage.deleteInstance();
+
             // Pass the list of boats to the GameController
-            //gameController.setBoatsList(boatsList);
-
-            Scene scene = new Scene(root);
-            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            stage.setScene(scene);
-            stage.show();
-
-
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-         */
-        Player player = new Player();
-        MachineBoard machineBoard = new MachineBoard();
-
-        PreparationStage.deleteInstance();
-        GameStage.getInstance().getGameController().setPlayer(player, machineBoard);
+            gameController1.setPlayer(player, machineBoard);
+            gameController1.setBoatsList(boatsList);
 
     }
 }
