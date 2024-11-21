@@ -10,6 +10,7 @@ import javafx.scene.shape.Rectangle;
 
 public class Boat extends Group implements BoatInterface {
 
+    private final String name;
     private static final int SQUARE_SIZE = 60;
     private int length;
     private boolean isHorizontal;
@@ -21,7 +22,8 @@ public class Boat extends Group implements BoatInterface {
     private boolean wasFirstMove = true;
     private final Group boatStyle; // Grupo que define el estilo visual del barco
 
-    public Boat(double startX, double startY, int length, boolean isHorizontal, Group boatStyle) {
+    public Boat(String name, double startX, double startY, int length, boolean isHorizontal, Group boatStyle) {
+        this.name = name;
         this.startX = startX;
         this.startY = startY;
         this.length = length;
@@ -114,6 +116,10 @@ public class Boat extends Group implements BoatInterface {
 
     public int[] getPosition() {
         return new int[]{currentRow, currentCol};
+    }
+
+    public Group getBoatStyle(){
+        return boatStyle;
     }
 
     public void setBoardHandler(BoardHandler boardHandler) {
