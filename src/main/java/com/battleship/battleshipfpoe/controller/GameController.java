@@ -1,8 +1,6 @@
 package com.battleship.battleshipfpoe.controller;
 
-import com.battleship.battleshipfpoe.model.DraggableMaker;
-import com.battleship.battleshipfpoe.model.MachineBoard;
-import com.battleship.battleshipfpoe.model.PlayerBoard;
+import com.battleship.battleshipfpoe.model.*;
 import com.battleship.battleshipfpoe.view.*;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -10,12 +8,17 @@ import javafx.scene.Group;
 import javafx.scene.control.Button;
 import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class GameController {
 
@@ -38,12 +41,15 @@ public class GameController {
 
     @FXML
     private Label labelShow; // Show text: hide/show
+    @FXML
+    private TextField textFieldName;
 
     @FXML
     private GridPane gridPaneMachine;
     @FXML
     private GridPane gridPanePlayer;
 
+    private Player player;
     private DraggableMaker draggableMaker;
     private AircraftCarrier aircraftCarrier;
     private Frigate frigate;
@@ -54,10 +60,12 @@ public class GameController {
     private MachineBoard machineBoard;
 
     private boolean buttonShowPressed;
+    private List<Button> buttonList;
+    private Button[][] matrixButtons;
 
     public GameController() {
         playerBoard = new PlayerBoard();
-        machineBoard = new MachineBoard();
+        //machineBoard = new MachineBoard();
         draggableMaker = new DraggableMaker();
         aircraftCarrier = new AircraftCarrier();
         shipSunk = new ShipSunk();
@@ -65,14 +73,39 @@ public class GameController {
         bombTouch = new BombTouch();
         waterShot = new WaterShot();
         buttonShowPressed = false;
+        buttonList = new ArrayList<>();
+        matrixButtons = new Button[10][10];
     }
 
     @FXML
     public void initialize(){
-        createTableMachine();
         createTablePlayer();
         positionShips();
         positionShapes();
+    }
+
+    public void setPlayer(Player player, MachineBoard machineBoard) {
+        this.player = player;
+        this.machineBoard = machineBoard;
+        startGame();
+    }
+
+    public void startGame(){
+        textFieldName.setText(player.getNickname());
+        createTableMachine();
+
+//        do{
+//
+//        }while(playerPlay() && machinePlay());
+    }
+
+    public boolean playerPlay(){
+
+        return true;
+    }
+    public boolean machinePlay(){
+
+        return true;
     }
 
     public void positionShips(){
@@ -81,6 +114,14 @@ public class GameController {
     }
 
     public void positionShapes(){
+//        // --------------Prueba de serializacion
+//        player.setNickname("BELICO");
+//        PlaneTextFileHandler planeTextFileHandler = new PlaneTextFileHandler();
+//        planeTextFileHandler.writeToFile("player_data.csv", player.getNickname() + ","+player.getShipsDestroyed());
+
+//        SerializableFileHandler serializableFileHandler = new SerializableFileHandler();
+//        serializableFileHandler.serialize("player-data.ser", player);
+
         Group group = waterShot.getWaterShot();
         water.getChildren().add(group);
         group = bombTouch.getBombTouch();
@@ -128,10 +169,14 @@ public class GameController {
                 btn.getStylesheets().add(String.valueOf(getClass().getResource("/com/battleship/battleshipfpoe/css/index.css")));
                 btn.getStyleClass().add("button-gridPane-hide");
                 gridPaneMachine.add(btn, j, i); // Agrega los botones creados al GridPane Machine
-                machineBoard.setButtonList(btn); // Matriz para establecer eventos a cada boton.
-                machineBoard.setMatrixButtons(btn, i-1, j-1); // Matriz para agregar los botones creados
+                buttonList.add(btn); // Matriz para establecer eventos a cada boton.
+                matrixButtons[i-1][j-1] = btn; // Matriz para agregar los botones creados
+                handleButtonValue(btn);
             }
         }
+        // Serializar el objeto MachineBoard
+        SerializableFileHandler serializableFileHandler = new SerializableFileHandler();
+        serializableFileHandler.serialize("machineBoard_data.ser", machineBoard);
     }
 
     public void createTablePlayer(){
@@ -146,19 +191,12 @@ public class GameController {
                 btn.getStylesheets().add(String.valueOf(getClass().getResource("/com/battleship/battleshipfpoe/css/index.css")));
                 btn.getStyleClass().add("button-gridPane-show");
                 gridPanePlayer.add(btn, j, i);
-                handleButtonValue(btn,text);
             }
         }
     }
 
-    public void activateMachineEvents(){
-        for(int i=0; i<100; i++){
-            Button btn = machineBoard.getButtonList().get(i);
-            handleButtonValue(btn,btn.getText());
-        }
-    }
 
-    public void handleButtonValue(Button btn, String text){
+    public void handleButtonValue(Button btn){
         btn.setOnMouseClicked(event -> {
             pressedCell(btn);
             btn.setText("1");
@@ -166,6 +204,11 @@ public class GameController {
             //System.out.println(btn.getText());
             btn.setOnMouseClicked(null); // Desactiva el evento después de ejecutarse una vez
             btn.setOnMouseEntered(null);
+            // SI EL TEXTO DEL BOTON PRESIONADO ES "0" ENTONCES
+            // -> DISPARAR MAQUINA ALEATORIAMENTE
+            // SINO VUELVE A TIRAR EL JUGADOR Y ADEMAS SE EJECUTA UN METODO DE VERIFICA SI UN BARCO HA SIDO
+            // DESTRUIDO Y OTRO METODO QUE VERIFIQUE SI HA DERRIBADO TODOS LOS BARCOS "RECORRE EL ARREGLO
+            // Y SI NO HAY BOTONES CON TEXTO 1 ENTONCES HA GANADO EL JUEGO"
         });
         btn.setOnMouseEntered(event -> {
             btn.getStylesheets().add(String.valueOf(getClass().getResource("/com/battleship/battleshipfpoe/css/styles-game.css")));
@@ -210,7 +253,7 @@ public class GameController {
     }
 
     public void showHideMachineGridPane(String url, String css1, String css2){
-        Button[][] matrixButtons = machineBoard.getMatrixButtons();
+        //Button[][] matrixButtons = machineBoard.getMatrixButtons();
         for(int i=0; i<10; i++){
             for(int j=0; j<10; j++){
                 Button btn = matrixButtons[i][j];
@@ -220,15 +263,33 @@ public class GameController {
             }
         }
     }
+    private StringBuilder inputText = new StringBuilder();
+    @FXML
+    public void onKeyTyped(KeyEvent event) {
+        String character = event.getCharacter();
+
+        // Concatenar el carácter al StringBuilder si es válido
+        if (character.matches("[a-zA-Z0-9 ]")) { // Permitir letras, números y espacios
+            inputText.setLength(0); // Limpiar el contenido previo
+            inputText.append(textFieldName.getText());
+        } else {
+            event.consume(); // Ignorar caracteres no válidos
+        }
+    }
 
     @FXML
     void handleClickStart(ActionEvent event) {
-        activateMachineEvents();
+        //activateMachineEvents();
+        System.out.println(player.toString());
     }
 
     @FXML
     public void handleClickExit(){
+        player.setNickname(textFieldName.getText());
+        PlaneTextFileHandler planeTextFileHandler = new PlaneTextFileHandler();
+        planeTextFileHandler.writeToFile("player_data.csv", player.getNickname() + ","+player.getShipsDestroyed());
+
         GameStage.deleteInstance();
-        //WelcomeStage.getInstance();
+        WelcomeStage.getInstance();
     }
 }

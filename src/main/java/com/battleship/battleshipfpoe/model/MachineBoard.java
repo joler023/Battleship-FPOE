@@ -2,21 +2,18 @@ package com.battleship.battleshipfpoe.model;
 
 import javafx.scene.control.Button;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class MachineBoard {
+public class MachineBoard implements Serializable {
     private List<List<Integer>> matrixMachine;
-    private List<Button> buttonList;
-    private Button[][] matrixButtons;
     private Random rand;
     private List<String[]> shipsInfo; // Lista para almacenar información de los barcos
 
     public MachineBoard() {
         matrixMachine = new ArrayList<>();
-        matrixButtons = new Button[10][10];
-        buttonList = new ArrayList<>();
         rand = new Random();
         shipsInfo = new ArrayList<>();
         generateBoardMachine();
@@ -105,6 +102,9 @@ public class MachineBoard {
 
     // Metodo para imprimir la información de los barcos colocados
     public void printShipsInfo() {
+        // SERIALIZAR POSICIONES DE LOS MATRIZ CON LAS POCISIONES DE LOS BARCOS
+
+
         for (String[] ship : shipsInfo) {
             System.out.println("Barco: " + ship[0] + ", Inicio: " + ship[1] + ", Fin: " + ship[2]); // Imprimir información del barco
         }
@@ -114,18 +114,4 @@ public class MachineBoard {
         return matrixMachine;
     }
 
-    public void setButtonList(Button btn) {
-        buttonList.add(btn);
-    }
-    public List<Button> getButtonList() {
-        return buttonList;
-    }
-
-    public Button[][] getMatrixButtons() {
-        return matrixButtons;
-    }
-
-    public void setMatrixButtons(Button btn, int i, int j) {
-        matrixButtons[i][j] = btn;
-    }
 }
