@@ -1,7 +1,6 @@
 package com.battleship.battleshipfpoe.controller;
 
-import com.battleship.battleshipfpoe.model.BoardHandler;
-import com.battleship.battleshipfpoe.model.Boat;
+import com.battleship.battleshipfpoe.model.*;
 import com.battleship.battleshipfpoe.view.*;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -29,6 +28,9 @@ public class PreparationController implements Initializable {
     final boolean[] initialOrientation = new boolean[1];
     private boolean wasSnapped = false; // Nueva variable
 
+    private SerializableFileHandler serializableFileHandler;
+    private PlaneTextFileHandler planeTextFileHandler;
+    private GameController gameController;
 
 
     @FXML
@@ -43,6 +45,9 @@ public class PreparationController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         initializeBoard();
+        serializableFileHandler = new SerializableFileHandler();
+        planeTextFileHandler = new PlaneTextFileHandler();
+        gameController = new GameController();
 
         // Separación entre los barcos
         int horizontalSpacing = 80; // Espaciado horizontal entre barcos
@@ -331,8 +336,11 @@ public class PreparationController implements Initializable {
             e.printStackTrace();
         }
          */
+        Player player = new Player();
+        MachineBoard machineBoard = new MachineBoard();
+
         PreparationStage.deleteInstance();
-        GameStage.getInstance();
+        GameStage.getInstance().getGameController().setPlayer(player, machineBoard);
 
     }
 }
