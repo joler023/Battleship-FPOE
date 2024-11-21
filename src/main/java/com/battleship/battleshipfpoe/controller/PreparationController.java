@@ -63,21 +63,21 @@ public class PreparationController implements Initializable {
 
         // Creación de Fragatas con espaciado horizontal
         for (int i = 0; i < 4; i++) {
-            fragates.add(new Boat(firstBoatXPosition + (i * horizontalSpacing), firstBoatYPosition, 1, true, new Frigate().getFrigate()));
+            fragates.add(new Boat( "Fragata", firstBoatXPosition + (i * horizontalSpacing), firstBoatYPosition, 1, true, new Frigate().getFrigate()));
         }
 
         ArrayList<Boat> destroyers = new ArrayList<>();
 
         // Creación de Destroyers con espaciado horizontal
         for (int i = 0; i < 3; i++) {
-            destroyers.add(new Boat(firstBoatXPosition + (i * (horizontalSpacing + 30)), firstBoatYPosition + verticalSpacing, 2, true, new Destroyer().getDestroyer()));
+            destroyers.add(new Boat("Destructor",firstBoatXPosition + (i * (horizontalSpacing + 30)), firstBoatYPosition + verticalSpacing, 2, true, new Destroyer().getDestroyer()));
         }
 
         ArrayList<Boat> submarines = new ArrayList<>();
 
         // Creación de Submarines con espaciado horizontal
         for (int i = 0; i < 2; i++) {
-            submarines.add(new Boat(firstBoatXPosition + (i * (horizontalSpacing +100)), firstBoatYPosition + (2 * verticalSpacing), 3, true, new Submarine().getSubmarine()));
+            submarines.add(new Boat("Submarino",firstBoatXPosition + (i * (horizontalSpacing +100)), firstBoatYPosition + (2 * verticalSpacing), 3, true, new Submarine().getSubmarine()));
         }
 
         // Añadir Fragatas al panel
