@@ -13,7 +13,7 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        GameStage.getInstance();
-        //WelcomeStage.getInstance();
+        //GameStage.getInstance();
+        WelcomeStage.getInstance();
     }
 }

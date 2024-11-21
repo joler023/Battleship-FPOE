@@ -41,7 +41,7 @@
                         <Image url="@images/user-game.png" />
                      </image>
                   </ImageView>
-                  <TextField alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="31.0" prefWidth="108.0" styleClass="label-Game" text="JUGADOR" />
+                  <TextField fx:id="textFieldName" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onKeyTyped="#onKeyTyped" prefHeight="31.0" prefWidth="108.0" styleClass="label-Game" />
                </children>
             </VBox>
             <VBox alignment="CENTER" prefHeight="181.0" prefWidth="178.0">
