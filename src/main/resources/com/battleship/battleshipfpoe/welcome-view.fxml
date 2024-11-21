@@ -46,7 +46,7 @@
                   </DropShadow>
                </effect>
             </Button>
-            <Button mnemonicParsing="false" prefHeight="60.0" prefWidth="300.0" styleClass="buttons" stylesheets="@css/styles-welcome.css" text="CONTINUAR">
+            <Button mnemonicParsing="false" onAction="#handleClickContinue" prefHeight="60.0" prefWidth="300.0" styleClass="buttons" stylesheets="@css/styles-welcome.css" text="CONTINUAR">
                <cursor>
                   <Cursor fx:constant="HAND" />
                </cursor>
