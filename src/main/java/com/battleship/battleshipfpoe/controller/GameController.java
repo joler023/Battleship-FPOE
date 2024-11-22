@@ -95,7 +95,31 @@ public class GameController {
         startGame();
     }
 
-
+//    public void placeShipsOnGrid(GridPane gridPane) throws PlacementException {
+//        List<String[]> shipsInfo = machineBoard.getShipsInfo(); // Obtén la información de los barcos
+//
+//        for (String[] ship : shipsInfo) {
+//            String shipName = ship[0]; // Este es el ID, del barco
+//            String start = ship[1]; // Ejemplo: "0,0"
+//            String end = ship[2];   // Ejemplo: "0,3"
+//
+//            // Parsear coordenadas
+//            String[] startCoords = start.replace("(", "").replace(")", "").trim().split(",");
+//            int startRow = Integer.parseInt(startCoords[0].trim());
+//            int startCol = Integer.parseInt(startCoords[1].trim());
+//
+//            String[] endCoords = end.replace("(", "").replace(")", "").trim().split(",");
+//            int endRow = Integer.parseInt(endCoords[0].trim());
+//            int endCol = Integer.parseInt(endCoords[1].trim());
+//
+//            // Determinar orientación y longitud
+//            boolean isHorizontal = startRow == endRow;
+//            int length = isHorizontal ? (endCol - startCol + 1) : (endRow - startRow + 1);
+//
+//            // Colocar el barco en el GridPane
+//            placeShipOnGrid(gridPane, startRow, startCol, length, isHorizontal);
+//        }
+//    }
     public void placeShipsOnGrid(GridPane gridPane) throws PlacementException {
         List<String[]> shipsInfo = machineBoard.getShipsInfo(); // Obtén la información de los barcos
 
@@ -113,15 +137,29 @@ public class GameController {
             int endRow = Integer.parseInt(endCoords[0].trim());
             int endCol = Integer.parseInt(endCoords[1].trim());
 
+            // Normalizar coordenadas
+            int normalizedStartRow = Math.min(startRow, endRow);
+            int normalizedStartCol = Math.min(startCol, endCol);
+            int normalizedEndRow = Math.max(startRow, endRow);
+            int normalizedEndCol = Math.max(startCol, endCol);
 
             // Determinar orientación y longitud
-            boolean isHorizontal = startRow == endRow;
-            int length = isHorizontal ? (endCol - startCol + 1) : (endRow - startRow + 1);
+            boolean isHorizontal = normalizedStartRow == normalizedEndRow;
+            int length = isHorizontal ? (normalizedEndCol - normalizedStartCol + 1) : (normalizedEndRow - normalizedStartRow + 1);
+
+            System.out.println("Colocando barco: " + shipName);
+            System.out.println("Inicio: (" + normalizedStartRow + ", " + normalizedStartCol + ")");
+            System.out.println("Fin: (" + normalizedEndRow + ", " + normalizedEndCol + ")");
+            System.out.println("Longitud: " + length + ", Horizontal: " + isHorizontal);
 
             // Colocar el barco en el GridPane
-            placeShipOnGrid(gridPane, startRow, startCol, length, isHorizontal);
+            placeShipOnGrid(gridPane, normalizedStartRow, normalizedStartCol, length, isHorizontal);
         }
     }
+
+
+
+
 
     private void placeShipOnGrid(GridPane gridPane, int startRow, int startCol, int length, boolean isHorizontal) throws PlacementException {
         // Validar índices
@@ -137,21 +175,27 @@ public class GameController {
 
         // Crear el barco y configurarlo
         Rectangle ship = new Rectangle();
-        ship.setFill(getColorByLength(length));
+        ship.setFill(getColorByLength(length)); // Método que retorna un color según la longitud
         ship.setStroke(Color.BLACK);
 
+        // Ajustar dimensiones del rectángulo
         if (isHorizontal) {
-            ship.setWidth(length * 40);
-            ship.setHeight(40);
+            ship.setWidth(length * 40); // Multiplicar el ancho por el tamaño de la celda
+            ship.setHeight(40);        // Altura fija de una celda
         } else {
-            ship.setWidth(40);
-            ship.setHeight(length * 40);
+            ship.setWidth(40);         // Ancho fijo de una celda
+            ship.setHeight(length * 40); // Multiplicar la altura por el tamaño de la celda
         }
 
-        gridPane.add(ship, startCol + 1, startRow + 1);
-        GridPane.setRowSpan(ship, isHorizontal ? 1 : length);
-        GridPane.setColumnSpan(ship, isHorizontal ? length : 1);
+        // Añadir el rectángulo al GridPane
+        gridPane.add(ship, startCol+1, startRow+1); // Usar índices exactos (sin sumar 1)
+        if (isHorizontal) {
+            GridPane.setColumnSpan(ship, length); // Ajustar el span horizontal
+        } else {
+            GridPane.setRowSpan(ship, length);    // Ajustar el span vertical
+        }
     }
+
 
 
 
@@ -277,8 +321,8 @@ public class GameController {
             }
         }
         // Serializar el objeto MachineBoard
-        SerializableFileHandler serializableFileHandler = new SerializableFileHandler();
-        serializableFileHandler.serialize("machineBoard_data.ser", machineBoard);
+//        SerializableFileHandler serializableFileHandler = new SerializableFileHandler();
+//        serializableFileHandler.serialize("machineBoard_data.ser", machineBoard);
     }
 
     public void createTablePlayer() {
