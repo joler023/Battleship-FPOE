@@ -15,6 +15,7 @@ public abstract class BoardBase {
     private final int tilesDown;
     private final AnchorPane anchorPane;
     private final ArrayList<ArrayList<Integer>> board;
+    private Game game;
 
     /**
      * Constructs a BoardBase object with the given parameters.
@@ -29,6 +30,7 @@ public abstract class BoardBase {
         this.planeHeight = planeHeight;
         this.gridSize = gridSize;
         this.anchorPane = anchorPane;
+        game= new Game();
 
         tilesAcross = (int) (planeWidth / gridSize);
         tileAmount = (int) ((planeWidth / gridSize) * (planeHeight / gridSize));

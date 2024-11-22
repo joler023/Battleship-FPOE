@@ -9,9 +9,11 @@ public class PlayerBoard {
     private List<Integer> shipsTouched;
     private List<Integer> sunkenShips;
     private List<Integer> waterShots;
+    private Game game;
 
     public PlayerBoard() {
         matrixPlayer = new ArrayList<>();
+        game = new Game();
         generateBoardPlayer();
     }
 
@@ -24,7 +26,6 @@ public class PlayerBoard {
             matrixPlayer.add(row);
         }
     }
-
 
 
     public List<List<Integer>> getMatrixPlayer() {
@@ -45,6 +46,7 @@ public class PlayerBoard {
         for (int i = 0; i < length; i++) {
             if (isHorizontal) {
                 matrixPlayer.get(row).set(col + i, 1); // Reemplaza el valor en lugar de desplazarlo
+
             } else {
                 matrixPlayer.get(row + i).set(col, 1); // Reemplaza el valor en lugar de desplazarlo
             }
