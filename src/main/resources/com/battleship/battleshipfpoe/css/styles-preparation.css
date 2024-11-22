@@ -1,0 +1,45 @@
+
+.anchorPane {
+    -fx-background-image: url('../images/background-preparation.jpeg');
+    -fx-background-size: cover;
+    -fx-background-repeat: no-repeat;
+}
+
+#BoardPane {
+    -fx-background-insets: 5;
+    -fx-border-radius: 10;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.75), 10, 0.3, 0, 4);
+}
+
+
+#BoatPane {
+    -fx-background-color: #9fbfbd;
+    -fx-border-color: #5d6d7e;
+    -fx-border-width: 3px;
+    -fx-background-radius: 15;
+    -fx-border-radius: 15;
+    -fx-effect: innershadow(gaussian, rgba(0, 0, 0, 0.4), 10, 0.5, 2, 2);
+}
+
+
+.button {
+    -fx-background-color: #000000;
+    -fx-border-radius: 20;
+    -fx-background-radius: 20;
+    -fx-text-fill: #ffffff;
+    -fx-padding: 10;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.5), 10, 0.3, 0, 4);
+}
+
+.button:hover {
+    -fx-background-color: #ffffff;
+    -fx-text-fill: #000000;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.75), 15, 0.5, 0, 4);
+}
+
+
+.button > .text {
+    -fx-font-size: 21px;
+    -fx-font-family: "Arial";
+    -fx-font-weight: bold;
+}
