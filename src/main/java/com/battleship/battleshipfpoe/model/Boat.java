@@ -22,6 +22,8 @@ public class Boat extends Group implements BoatInterface {
     private boolean wasFirstMove = true;
     private final Group boatStyle; // Grupo que define el estilo visual del barco
     private Game game;
+    private boolean[] hits; // Array para rastrear impactos
+
 
     public Boat(String name, double startX, double startY, int length, boolean isHorizontal, Group boatStyle) {
         this.name = name;
@@ -32,10 +34,25 @@ public class Boat extends Group implements BoatInterface {
         this.boatStyle = boatStyle;
         game = new Game();
 
+        this.hits = new boolean[length]; // Inicializar array de impactos
+
+
         // Inicializa el barco con el estilo y posición inicial
         placeBoat(startX, startY, length, isHorizontal);
 
         setupInteractions();
+    }
+
+    public void markHit(int index) {
+        hits[index] = true; // Marcar sección como impactada
+    }
+
+    public boolean isSunk() {
+        // Verificar si todas las secciones han sido alcanzadas
+        for (boolean hit : hits) {
+            if (!hit) return false;
+        }
+        return true;
     }
 
     @Override
@@ -126,6 +143,11 @@ public class Boat extends Group implements BoatInterface {
 
     public void setBoardHandler(BoardHandler boardHandler) {
         this.boardHandler = boardHandler;
+    }
+
+    public void setPosition(int row, int col){
+        currentRow = row;
+        currentCol = col;
     }
 
     private void setupInteractions() {
