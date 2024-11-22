@@ -154,13 +154,10 @@ public class Boat extends Group implements BoatInterface {
         boatStyle.setRotate(rotated ? -90 : 0);
 
         placeBoat(getLayoutX(), getLayoutY(), length, isHorizontal);
+    }
 
-        System.out.println("--------");
-        boardHandler.printBoard();
-        System.out.println("Boat rotated.");
-        System.out.println("Placing boat at X: " + getLayoutX() + ", Y: " + getLayoutY() + ", Horizontal: " + isHorizontal);
-        boardHandler.printBoard();
-        System.out.println("--------");
+    public String getName(){
+        return name;
     }
 
     public boolean isWasFirstMove() {

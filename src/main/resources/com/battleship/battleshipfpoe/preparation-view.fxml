@@ -15,5 +15,10 @@
                   </font>
               </Button>
          </children></Pane>
+      <Label layoutX="113.0" layoutY="671.0" text="Mientras arrastras un barco presiona R para rotarlo" textFill="WHITE">
+         <font>
+            <Font name="System Bold" size="23.0" />
+         </font>
+      </Label>
     </children>
 </AnchorPane>
