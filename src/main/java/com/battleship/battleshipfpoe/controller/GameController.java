@@ -520,14 +520,18 @@ public class GameController {
             try {
                 setImageButtonShow("/com/battleship/battleshipfpoe/images/icon-hide.png", "OCULTAR");
                 showHideMachineGridPane("/com/battleship/battleshipfpoe/css/index.css", "button-gridPane-hide", "button-gridPane-show");
+                placeShipsOnGrid(gridPaneMachine);
                 buttonShowPressed = true;
             } catch (RuntimeException e) {
                 // EXCEPCIÓN NO MARCADA: Maneja errores al cambiar visibilidad.
                 System.err.println("Error cambiando la visibilidad del tablero: " + e.getMessage());
+            } catch (PlacementException e) {
+                throw new RuntimeException(e);
             }
         } else {
             setImageButtonShow("/com/battleship/battleshipfpoe/images/icon-show.png", "MOSTRAR");
             showHideMachineGridPane("/com/battleship/battleshipfpoe/css/index.css", "button-gridPane-show", "button-gridPane-hide");
+            removeAllShipsFromGrid(gridPaneMachine);
             buttonShowPressed = false;
         }
     }
