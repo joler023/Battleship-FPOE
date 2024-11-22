@@ -59,6 +59,7 @@ public class GameController {
     private ShipSunk shipSunk;
     private PlayerBoard playerBoard;
     private MachineBoard machineBoard;
+    private Game game;
 
     private boolean buttonShowPressed;
     private List<Button> buttonList;
@@ -76,6 +77,7 @@ public class GameController {
         buttonShowPressed = false;
         buttonList = new ArrayList<>();
         matrixButtons = new Button[10][10];
+        game = new Game();
     }
 
     @FXML
@@ -143,16 +145,6 @@ public class GameController {
 
         playerBoard.printMatrix();
         createTablePlayer();
-       // paintShipsOnGrid();
-    }
-
-    public boolean playerPlay(){
-
-        return true;
-    }
-    public boolean machinePlay(){
-
-        return true;
     }
 
     public void positionShips(){
@@ -161,14 +153,6 @@ public class GameController {
     }
 
     public void positionShapes(){
-//        // --------------Prueba de serializacion
-//        player.setNickname("BELICO");
-//        PlaneTextFileHandler planeTextFileHandler = new PlaneTextFileHandler();
-//        planeTextFileHandler.writeToFile("player_data.csv", player.getNickname() + ","+player.getShipsDestroyed());
-
-//        SerializableFileHandler serializableFileHandler = new SerializableFileHandler();
-//        serializableFileHandler.serialize("player-data.ser", player);
-
         Group group = waterShot.getWaterShot();
         water.getChildren().add(group);
         group = bombTouch.getBombTouch();
@@ -239,6 +223,8 @@ public class GameController {
                 btn.getStylesheets().add(String.valueOf(getClass().getResource("/com/battleship/battleshipfpoe/css/index.css")));
                 btn.getStyleClass().add("button-gridPane-show");
 
+                game.setMatrix(i-1,j-1, btn);
+
                 // Añadir el botón al GridPane
                 gridPanePlayer.add(btn, j, i);
 
@@ -282,6 +268,8 @@ public class GameController {
             //System.out.println(btn.getText());
             btn.setOnMouseClicked(null); // Desactiva el evento después de ejecutarse una vez
             btn.setOnMouseEntered(null);
+
+            game.shootingMachine();
             // SI EL TEXTO DEL BOTON PRESIONADO ES "0" ENTONCES
             // -> DISPARAR MAQUINA ALEATORIAMENTE
             // SINO VUELVE A TIRAR EL JUGADOR Y ADEMAS SE EJECUTA UN METODO DE VERIFICA SI UN BARCO HA SIDO
