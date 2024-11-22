@@ -21,6 +21,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -29,9 +30,6 @@ public class GameController {
     @FXML
     private Button buttonCarrier;
     private Group airCraftCarrier;
-    private Group submarineGroup;
-    private Group destroyerGroup;
-    private Group frigateGroup;
 
     @FXML
     private Button buttonSubmarine;
@@ -67,8 +65,6 @@ public class GameController {
     private PlayerBoard playerBoard;
     private MachineBoard machineBoard;
     private Game game;
-    private Submarine submarine;
-    private Destroyer destroyer;
 
     private boolean buttonShowPressed;
     private List<Button> buttonList;
@@ -76,7 +72,7 @@ public class GameController {
 
     public GameController() {
         playerBoard = new PlayerBoard();
-        machineBoard = new MachineBoard();
+        //machineBoard = new MachineBoard();
         draggableMaker = new DraggableMaker();
         aircraftCarrier = new AircraftCarrier();
         shipSunk = new ShipSunk();
@@ -87,14 +83,6 @@ public class GameController {
         buttonList = new ArrayList<>();
         matrixButtons = new Button[10][10];
         game = new Game();
-        submarine = new Submarine();
-        destroyer = new Destroyer();
-
-        // Inicializa las figuras de los barcos
-        airCraftCarrier = aircraftCarrier.getAircraftCarrier();
-        submarineGroup = submarine.getSubmarine();
-        destroyerGroup = destroyer.getDestroyer();
-        frigateGroup = frigate.getFrigate();
     }
 
     @FXML
@@ -221,36 +209,6 @@ public class GameController {
         game.imprimirMatrizJugador();
     }
 
-    public void paintShipsOnGrid() {
-        for (Boat boat : boats) { // Iterar sobre la lista de barcos
-            int[] position = boat.getPosition();
-            int row = position[0];
-            int col = position[1];
-            boolean isHorizontal = boat.isHorizontal();
-            int length = boat.getLength();
-
-            // Iterar sobre las posiciones que ocupa el barco
-            for (int i = 0; i < length; i++) {
-                int currentRow = isHorizontal ? row : row + i;
-                int currentCol = isHorizontal ? col + i : col;
-
-                // Validar que no salgan de los límites del GridPane
-                if (currentRow >= 0 && currentRow < 10 && currentCol >= 0 && currentCol < 10) {
-                    Button btn = matrixButtons[currentRow][currentCol];
-
-                    // Crear una copia visual del estilo del barco
-                    Group boatPartStyle = new Group(boat.getChildren()); // Copiar el estilo
-                    boatPartStyle.setScaleX(0.5); // Ajustar escala si es necesario
-                    boatPartStyle.setScaleY(0.5);
-
-                    // Setear el estilo en el botón
-                    btn.setGraphic(boatPartStyle);
-                    btn.setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
-                }
-            }
-        }
-    }
-
     public void setBoatsList(List<Boat> boatsList) {
         // Iterate over each boat in the list
         for (Boat boat : boatsList) {
@@ -273,7 +231,6 @@ public class GameController {
     public void positionShips(){
         positionAirCraftCarrier();
         positionSubmarine();
-
     }
 
     public void positionShapes(){
@@ -285,11 +242,11 @@ public class GameController {
         fire.getChildren().add(group);
     }
 
-
     public void positionAirCraftCarrier(){
         airCraftCarrier = aircraftCarrier.getAircraftCarrier();
         buttonCarrier.setGraphic(airCraftCarrier);
         draggableMaker.makeDraggable(buttonCarrier);
+
         onFocusedButton(buttonCarrier);
     }
 
@@ -316,7 +273,7 @@ public class GameController {
         for(int i=1; i<11; i++){
             for(int j=1; j<11; j++){
                 Button btn = new Button();
-                Integer value = machineBoard.getMatrixMachine().get(i-1).get(j-1);
+                Integer value = machineBoard.getMatrix().get(i-1).get(j-1);
                 String text = String.valueOf(value);
                 btn.setText(text);
                 btn.setPrefHeight(40);
@@ -335,19 +292,22 @@ public class GameController {
     }
 
     public void createTablePlayer() {
+        // Creamos un Pane para los barcos que se renderizará detrás del grid
+        Pane boatsPane = new Pane();
+        gridPanePlayer.getChildren().add(boatsPane); // Añadimos el Pane al GridPane del jugador
+
         // Recorremos la matriz del tablero de jugadores
         for (int i = 1; i < 11; i++) {
             for (int j = 1; j < 11; j++) {
                 Button btn = new Button();
-                Integer value = playerBoard.getMatrixPlayer().get(i - 1).get(j - 1);
-                String text = String.valueOf(value);
+                String text = "";
                 btn.setText(text);
                 btn.setPrefHeight(40);
                 btn.setPrefWidth(40);
                 btn.getStylesheets().add(String.valueOf(getClass().getResource("/com/battleship/battleshipfpoe/css/index.css")));
                 btn.getStyleClass().add("button-gridPane-show");
 
-                game.setMatrix(i-1,j-1, btn);
+                game.setMatrix(i - 1, j - 1, btn);
 
                 // Añadir el botón al GridPane
                 gridPanePlayer.add(btn, j, i);
@@ -369,12 +329,20 @@ public class GameController {
                         if (currentRow == i - 1 && currentCol == j - 1) {
                             // Crear una copia visual del estilo del barco
                             Group boatPartStyle = new Group(boat.getChildren()); // Copiar el estilo
-                            boatPartStyle.setScaleX(0.5); // Ajustar escala si es necesario
-                            boatPartStyle.setScaleY(0.5);
+                            boatPartStyle.setScaleX(0.7); // Ajustar escala si es necesario
+                            boatPartStyle.setScaleY(0.7);
 
-                            // Establecer el estilo visual en el botón
-                            btn.setGraphic(boatPartStyle);
-                            btn.setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
+                            // Establecer el estilo visual en el Pane de barcos (no en el botón)
+                            boatPartStyle.setTranslateX(j * 40); // Posicionar basado en la celda
+                            boatPartStyle.setTranslateY(i * 40);
+
+                            if(!boat.isHorizontal()) {
+                                boatPartStyle.setLayoutY(boatPartStyle.getLayoutY() + 50);
+                                boatPartStyle.setLayoutX(boatPartStyle.getLayoutX() - 50);
+                            }// Posicionar basado en la celda
+
+                            // Añadir el barco al Pane
+                            boatsPane.getChildren().add(boatPartStyle);
                         }
                     }
                 }
@@ -384,17 +352,21 @@ public class GameController {
 
 
 
-    public void handleButtonValue(Button btn){
+    public void handleButtonValue(Button btn) {
         btn.setOnMouseClicked(event -> {
-            pressedCell(btn);
-            btn.setContentDisplay(ContentDisplay.GRAPHIC_ONLY); // Muestra solo el contenido grafico
-            //System.out.println(btn.getText());
-            btn.setOnMouseClicked(null); // Desactiva el evento después de ejecutarse una vez
+            int row = GridPane.getRowIndex(btn) - 1;
+            int col = GridPane.getColumnIndex(btn) - 1;
+
+            // Verificar impacto y estado de los barcos
+            checkShipHitAndSunk(btn, row, col);
+
+            btn.setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
+            btn.setOnMouseClicked(null); // Desactiva el evento después de ejecutarse
             btn.setOnMouseEntered(null);
 
-            if(Objects.equals(btn.getText(), "0")){
-                game.shootingMachine();
-                System.out.println("Turno de la maquina");
+            // Turno del jugador o de la máquina según el resultado
+            if (Objects.equals(btn.getText(), "0")) {
+                game.shootingMachine(boats, playerBoard);
             }
 
             // SI EL TEXTO DEL BOTON PRESIONADO ES "0" ENTONCES
@@ -411,6 +383,49 @@ public class GameController {
             btn.getStyleClass().remove("button-Entered");
         });
     }
+
+
+    public void checkShipHitAndSunk(Button btn, int row, int col) {
+        for (Boat boat : machineBoard.getBoats()) {
+            System.out.println("Boat: "+ boat.getName() + " "+ Arrays.toString(boat.getPosition()));
+            // Obtener posición y orientación del barco
+            int[] position = boat.getPosition();
+            int boatRow = position[0];
+            int boatCol = position[1];
+            boolean isHorizontal = boat.isHorizontal();
+            int length = boat.getLength();
+
+            // Verificar si el disparo impacta en el barco
+            for (int i = 0; i < length; i++) {
+                int currentRow = isHorizontal ? boatRow : boatRow + i;
+                int currentCol = isHorizontal ? boatCol + i : boatCol;
+
+                if (currentRow == row && currentCol == col) {
+                    // Registrar impacto en el barco
+                    boat.markHit(i);
+
+                    // Cambiar el gráfico del botón al impacto
+                    btn.setGraphic(bombTouch.getBombTouch());
+
+                    // Verificar si el barco está completamente destruido
+                    if (boat.isSunk()) {
+                        for (int j = 0; j < length; j++) {
+                            int sunkRow = isHorizontal ? boatRow : boatRow + j;
+                            int sunkCol = isHorizontal ? boatCol + j : boatCol;
+
+                            Button sunkBtn = matrixButtons[sunkRow][sunkCol];
+                            sunkBtn.setGraphic(shipSunk.getShipSunk());
+                        }
+                    }
+                    return; // No es necesario verificar más barcos
+                }
+            }
+        }
+
+        // Si no impactó en ningún barco, mostrar agua
+        btn.setGraphic(waterShot.getWaterShot());
+    }
+
 
     public void pressedCell(Button btn){
         String value = btn.getText();
