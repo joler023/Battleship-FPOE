@@ -19,6 +19,7 @@ import javafx.scene.layout.Pane;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class GameController {
 
@@ -96,7 +97,7 @@ public class GameController {
     public void startGame(){
         textFieldName.setText(player.getNickname());
         createTableMachine();
-
+        game.imprimirMatrizJugador();
     }
     public void paintShipsOnGrid() {
         for (Boat boat : boats) { // Iterar sobre la lista de barcos
@@ -263,13 +264,16 @@ public class GameController {
     public void handleButtonValue(Button btn){
         btn.setOnMouseClicked(event -> {
             pressedCell(btn);
-            btn.setText("1");
             btn.setContentDisplay(ContentDisplay.GRAPHIC_ONLY); // Muestra solo el contenido grafico
             //System.out.println(btn.getText());
             btn.setOnMouseClicked(null); // Desactiva el evento después de ejecutarse una vez
             btn.setOnMouseEntered(null);
 
-            game.shootingMachine();
+            if(Objects.equals(btn.getText(), "0")){
+                game.shootingMachine();
+                System.out.println("Turno de la maquina");
+            }
+
             // SI EL TEXTO DEL BOTON PRESIONADO ES "0" ENTONCES
             // -> DISPARAR MAQUINA ALEATORIAMENTE
             // SINO VUELVE A TIRAR EL JUGADOR Y ADEMAS SE EJECUTA UN METODO DE VERIFICA SI UN BARCO HA SIDO
