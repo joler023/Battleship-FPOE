@@ -115,13 +115,23 @@ public class GameController {
             int endRow = Integer.parseInt(endCoords[0].trim());
             int endCol = Integer.parseInt(endCoords[1].trim());
 
+            // Normalizar coordenadas
+            int normalizedStartRow = Math.min(startRow, endRow);
+            int normalizedStartCol = Math.min(startCol, endCol);
+            int normalizedEndRow = Math.max(startRow, endRow);
+            int normalizedEndCol = Math.max(startCol, endCol);
 
             // Determinar orientación y longitud
-            boolean isHorizontal = startRow == endRow;
-            int length = isHorizontal ? (endCol - startCol + 1) : (endRow - startRow + 1);
+            boolean isHorizontal = normalizedStartRow == normalizedEndRow;
+            int length = isHorizontal ? (normalizedEndCol - normalizedStartCol + 1) : (normalizedEndRow - normalizedStartRow + 1);
+
+            System.out.println("Colocando barco: " + shipName);
+            System.out.println("Inicio: (" + normalizedStartRow + ", " + normalizedStartCol + ")");
+            System.out.println("Fin: (" + normalizedEndRow + ", " + normalizedEndCol + ")");
+            System.out.println("Longitud: " + length + ", Horizontal: " + isHorizontal);
 
             // Colocar el barco en el GridPane
-            placeShipOnGrid(gridPane, startRow, startCol, length, isHorizontal);
+            placeShipOnGrid(gridPane, normalizedStartRow, normalizedStartCol, length, isHorizontal);
         }
     }
 
@@ -139,20 +149,25 @@ public class GameController {
 
         // Crear el barco y configurarlo
         Rectangle ship = new Rectangle();
-        ship.setFill(getColorByLength(length));
+        ship.setFill(getColorByLength(length)); // Método que retorna un color según la longitud
         ship.setStroke(Color.BLACK);
 
+        // Ajustar dimensiones del rectángulo
         if (isHorizontal) {
-            ship.setWidth(length * 40);
-            ship.setHeight(40);
+            ship.setWidth(length * 40); // Multiplicar el ancho por el tamaño de la celda
+            ship.setHeight(40);        // Altura fija de una celda
         } else {
-            ship.setWidth(40);
-            ship.setHeight(length * 40);
+            ship.setWidth(40);         // Ancho fijo de una celda
+            ship.setHeight(length * 40); // Multiplicar la altura por el tamaño de la celda
         }
 
-        gridPane.add(ship, startCol + 1, startRow + 1);
-        GridPane.setRowSpan(ship, isHorizontal ? 1 : length);
-        GridPane.setColumnSpan(ship, isHorizontal ? length : 1);
+        // Añadir el rectángulo al GridPane
+        gridPane.add(ship, startCol+1, startRow+1); // Usar índices exactos (sin sumar 1)
+        if (isHorizontal) {
+            GridPane.setColumnSpan(ship, length); // Ajustar el span horizontal
+        } else {
+            GridPane.setRowSpan(ship, length);    // Ajustar el span vertical
+        }
     }
 
 
@@ -279,8 +294,8 @@ public class GameController {
             }
         }
         // Serializar el objeto MachineBoard
-        SerializableFileHandler serializableFileHandler = new SerializableFileHandler();
-        serializableFileHandler.serialize("machineBoard_data.ser", machineBoard);
+//        SerializableFileHandler serializableFileHandler = new SerializableFileHandler();
+//        serializableFileHandler.serialize("machineBoard_data.ser", machineBoard);
     }
 
     public void createTablePlayer() {
@@ -505,14 +520,18 @@ public class GameController {
             try {
                 setImageButtonShow("/com/battleship/battleshipfpoe/images/icon-hide.png", "OCULTAR");
                 showHideMachineGridPane("/com/battleship/battleshipfpoe/css/index.css", "button-gridPane-hide", "button-gridPane-show");
+                placeShipsOnGrid(gridPaneMachine);
                 buttonShowPressed = true;
             } catch (RuntimeException e) {
                 // EXCEPCIÓN NO MARCADA: Maneja errores al cambiar visibilidad.
                 System.err.println("Error cambiando la visibilidad del tablero: " + e.getMessage());
+            } catch (PlacementException e) {
+                throw new RuntimeException(e);
             }
         } else {
             setImageButtonShow("/com/battleship/battleshipfpoe/images/icon-show.png", "MOSTRAR");
             showHideMachineGridPane("/com/battleship/battleshipfpoe/css/index.css", "button-gridPane-show", "button-gridPane-hide");
+            removeAllShipsFromGrid(gridPaneMachine);
             buttonShowPressed = false;
         }
     }

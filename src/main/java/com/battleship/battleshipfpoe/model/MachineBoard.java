@@ -82,10 +82,18 @@ public class MachineBoard implements Serializable {
 
                 // Registrar información del barco (posición inicial y final)
                 String[] shipInfo = new String[3];
+
                 shipInfo[0] = shipName; // Nombre del barco
                 shipInfo[1] = "(" + x + "," + y + ")"; // Posición inicial
-                shipInfo[2] = "(" + (x + size - 1) + "," + y + ")"; // Posición final
-                shipsInfo.add(shipInfo); // Agregar información a la lista
+
+// Determinar posición final según la orientación
+                if (isHorizontal) {
+                    shipInfo[2] = "(" + x + "," + (y + size - 1) + ")"; // Incrementar solo la columna
+                } else {
+                    shipInfo[2] = "(" + (x + size - 1) + "," + y + ")"; // Incrementar solo la fila
+
+                }
+                    shipsInfo.add(shipInfo); // Agregar información a la lista
 
                 // Agregar el objeto Boat a la lista de barcos
                 boats.add(boat);
