@@ -126,6 +126,9 @@ public class MachineBoard implements Serializable {
     public List<List<Integer>> getMatrix() {
         return matrixMachine;
     }
+    public List<String[]> getShipsInfo() {
+        return shipsInfo; // Retorna la lista con la información de los barcos
+    }
 
     public List<Boat> getBoats() {
         return boats;

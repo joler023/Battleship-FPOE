@@ -34,10 +34,10 @@ public class WelcomeController {
         player.setNickname(nickname);
         System.out.println("Nombre al darle continue: "+player.getNickname());
 
-        MachineBoard machineBoard = (MachineBoard) serializableFileHandler.deserialize("machineBoard_data.ser");
+        //MachineBoard machineBoard = (MachineBoard) serializableFileHandler.deserialize("machineBoard_data.ser");
 
         WelcomeStage.deleteInstance();
-        GameStage.getInstance().getGameController().setPlayer(player, machineBoard);
+        GameStage.getInstance().getGameController().setPlayer(player);
     }
 
     @FXML
