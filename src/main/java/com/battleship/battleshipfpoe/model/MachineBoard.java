@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+
 public class MachineBoard implements Serializable {
     private List<List<Integer>> matrixMachine;
     private Random rand;
@@ -16,18 +17,26 @@ public class MachineBoard implements Serializable {
         matrixMachine = new ArrayList<>();
         rand = new Random();
         shipsInfo = new ArrayList<>();
-        generateBoardMachine();
-        placeShips();
-        printShipsInfo();
+        try {
+            generateBoardMachine();
+            placeShips();
+            printShipsInfo();
+        } catch (BoardGenerationException e) {
+            System.err.println("Error generando el tablero: " + e.getMessage());
+        }
     }
 
-    public void generateBoardMachine() {
-        for (int i = 0; i < 10; i++) {
-            List<Integer> row = new ArrayList<>();
-            for (int j = 0; j < 10; j++) {
-                row.add(0);
+    public void generateBoardMachine() throws BoardGenerationException {
+        try {
+            for (int i = 0; i < 10; i++) {
+                List<Integer> row = new ArrayList<>();
+                for (int j = 0; j < 10; j++) {
+                    row.add(0);
+                }
+                matrixMachine.add(row);
             }
-            matrixMachine.add(row);
+        } catch (Exception e) {
+            throw new BoardGenerationException("Error al inicializar la matriz del tablero", e);
         }
     }
 
@@ -112,6 +121,14 @@ public class MachineBoard implements Serializable {
 
     public List<List<Integer>> getMatrixMachine() {
         return matrixMachine;
+    }
+    // Definición de excepciones directamente dentro de esta clase
+
+    // Excepción propia (Checked Exception)
+    public static class BoardGenerationException extends Exception {
+        public BoardGenerationException(String message, Throwable cause) {
+            super(message, cause);
+        }
     }
 
 }

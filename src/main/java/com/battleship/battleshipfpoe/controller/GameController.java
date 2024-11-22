@@ -160,20 +160,30 @@ public class GameController {
         });
     }
 
-    public void createTableMachine(){
-        for(int i=1; i<11; i++){
-            for(int j=1; j<11; j++){
+    public void createTableMachine() {
+        for (int i = 1; i < 11; i++) {
+            for (int j = 1; j < 11; j++) {
                 Button btn = new Button();
-                Integer value = machineBoard.getMatrixMachine().get(i-1).get(j-1);
-                String text = String.valueOf(value);
-                btn.setText(text);
+
+                // EXCEPCIÓN NO MARCADA: Verificar si el valor de la matriz es nulo.
+                try {
+                    Integer value = machineBoard.getMatrixMachine().get(i - 1).get(j - 1);
+                    if (value == null) {
+                        throw new RuntimeException("Valor nulo en la matriz de MachineBoard");
+                    }
+                    btn.setText(value.toString());
+                } catch (RuntimeException e) {
+                    // Manejo de errores de forma que el juego continúe.
+                    btn.setText("0");
+                    System.err.println("Error manejado: " + e.getMessage());
+                }
+
                 btn.setPrefHeight(40);
                 btn.setPrefWidth(40);
                 btn.getStylesheets().add(String.valueOf(getClass().getResource("/com/battleship/battleshipfpoe/css/index.css")));
                 btn.getStyleClass().add("button-gridPane-hide");
-                gridPaneMachine.add(btn, j, i); // Agrega los botones creados al GridPane Machine
-                buttonList.add(btn); // Matriz para establecer eventos a cada boton.
-                matrixButtons[i-1][j-1] = btn; // Matriz para agregar los botones creados
+                gridPaneMachine.add(btn, j, i);
+                matrixButtons[i - 1][j - 1] = btn;
                 handleButtonValue(btn);
             }
         }
@@ -285,22 +295,32 @@ public class GameController {
     // Función que oculta o muestra las casillas del GridPane de la maquina
     @FXML
     public void showMachineBoard(ActionEvent event) {
-        if(!buttonShowPressed){
-            setImageButtonShow("/com/battleship/battleshipfpoe/images/icon-hide.png", "OCULTAR");
-            showHideMachineGridPane("/com/battleship/battleshipfpoe/css/index.css","button-gridPane-hide","button-gridPane-show");
-            buttonShowPressed = true;
-        }
-        else{
+        if (!buttonShowPressed) {
+            try {
+                setImageButtonShow("/com/battleship/battleshipfpoe/images/icon-hide.png", "OCULTAR");
+                showHideMachineGridPane("/com/battleship/battleshipfpoe/css/index.css", "button-gridPane-hide", "button-gridPane-show");
+                buttonShowPressed = true;
+            } catch (RuntimeException e) {
+                // EXCEPCIÓN NO MARCADA: Maneja errores al cambiar visibilidad.
+                System.err.println("Error cambiando la visibilidad del tablero: " + e.getMessage());
+            }
+        } else {
             setImageButtonShow("/com/battleship/battleshipfpoe/images/icon-show.png", "MOSTRAR");
             showHideMachineGridPane("/com/battleship/battleshipfpoe/css/index.css", "button-gridPane-show", "button-gridPane-hide");
             buttonShowPressed = false;
         }
     }
 
-    public void setImageButtonShow(String url, String message){
-        Image image = new Image(getClass().getResource(url).toExternalForm());
-        imageShow.setImage(image);
-        labelShow.setText(message);
+    public void setImageButtonShow(String url, String message) {
+        try {
+            // EXCEPCIÓN MARCADA: Manejo de recursos gráficos (como imágenes).
+            Image image = new Image(getClass().getResource(url).toExternalForm());
+            imageShow.setImage(image);
+            labelShow.setText(message);
+        } catch (Exception e) {
+            // Registra el error pero no interrumpe el juego.
+            System.err.println("Error cambiando la imagen del botón: " + e.getMessage());
+        }
     }
 
     public void showHideMachineGridPane(String url, String css1, String css2){
