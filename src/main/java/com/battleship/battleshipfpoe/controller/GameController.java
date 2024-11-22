@@ -159,7 +159,7 @@ public class GameController {
 
 
 
-    // Método auxiliar para obtener un color según la longitud del barco
+    // Metodo auxiliar para obtener un color según la longitud del barco
     private Color getColorByLength(int length) {
         switch (length) {
             case 1:
@@ -192,7 +192,7 @@ public class GameController {
         gridPane.getChildren().removeAll(nodesToRemove);
     }
 
-    // Método auxiliar para identificar nodos de barcos por ID (opcional)
+    // Metodo auxiliar para identificar nodos de barcos por ID (opcional)
     private boolean isShipId(String id) {
         // Define una lista de IDs válidos para los barcos
         List<String> validShipIds = List.of("Portaviones", "Submarino", "Destructor", "Fragata");
@@ -440,28 +440,35 @@ public class GameController {
     }
 
     // Función que oculta o muestra las casillas del GridPane de la maquina
+    // Manejo del cambio de visibilidad del tablero de la máquina.
     @FXML
-    public void showMachineBoard(ActionEvent event) throws PlacementException {
-
-        if(!buttonShowPressed){
-            setImageButtonShow("/com/battleship/battleshipfpoe/images/icon-hide.png", "OCULTAR");
-            showHideMachineGridPane("/com/battleship/battleshipfpoe/css/index.css","button-gridPane-hide","button-gridPane-show");
-            placeShipsOnGrid(gridPaneMachine);
-            buttonShowPressed = true;
-        }
-        else{
+    public void showMachineBoard(ActionEvent event) {
+        if (!buttonShowPressed) {
+            try {
+                setImageButtonShow("/com/battleship/battleshipfpoe/images/icon-hide.png", "OCULTAR");
+                showHideMachineGridPane("/com/battleship/battleshipfpoe/css/index.css", "button-gridPane-hide", "button-gridPane-show");
+                buttonShowPressed = true;
+            } catch (RuntimeException e) {
+                // EXCEPCIÓN NO MARCADA: Maneja errores al cambiar visibilidad.
+                System.err.println("Error cambiando la visibilidad del tablero: " + e.getMessage());
+            }
+        } else {
             setImageButtonShow("/com/battleship/battleshipfpoe/images/icon-show.png", "MOSTRAR");
             showHideMachineGridPane("/com/battleship/battleshipfpoe/css/index.css", "button-gridPane-show", "button-gridPane-hide");
             buttonShowPressed = false;
-           // removeShipFromGrid(gridPaneMachine);
-            removeAllShipsFromGrid(gridPaneMachine);
         }
     }
 
-    public void setImageButtonShow(String url, String message){
-        Image image = new Image(getClass().getResource(url).toExternalForm());
-        imageShow.setImage(image);
-        labelShow.setText(message);
+    public void setImageButtonShow(String url, String message) {
+        try {
+            // EXCEPCIÓN MARCADA: Manejo de recursos gráficos (como imágenes).
+            Image image = new Image(getClass().getResource(url).toExternalForm());
+            imageShow.setImage(image);
+            labelShow.setText(message);
+        } catch (Exception e) {
+            // Registra el error pero no interrumpe el juego.
+            System.err.println("Error cambiando la imagen del botón: " + e.getMessage());
+        }
     }
 
     public void showHideMachineGridPane(String url, String css1, String css2){
