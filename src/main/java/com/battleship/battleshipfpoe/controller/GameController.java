@@ -27,13 +27,8 @@ import java.util.Objects;
 
 public class GameController {
 
-    @FXML
-    private Button buttonCarrier;
-    private Group airCraftCarrier;
-
-    @FXML
-    private Button buttonSubmarine;
-
+    public Label playerShipsSunkenLabel;
+    public Label machineShipsSunkenLabel;
     @FXML
     private ImageView imageShow;
 
@@ -65,6 +60,8 @@ public class GameController {
     private PlayerBoard playerBoard;
     private MachineBoard machineBoard;
     private Game game;
+    private int playerShipsSunken  = 0;
+    private int machineShipsSunken = 0;
 
     private boolean buttonShowPressed;
     private List<Button> buttonList;
@@ -207,6 +204,9 @@ public class GameController {
         textFieldName.setText(player.getNickname());
         createTableMachine();
         game.imprimirMatrizJugador();
+        machineShipsSunkenLabel.textProperty().addListener((observable, oldValue, newValue) -> {
+            machineShipsSunkenLabel.setText(String.valueOf(machineShipsSunken));
+        });
     }
 
     public void setBoatsList(List<Boat> boatsList) {
@@ -243,16 +243,10 @@ public class GameController {
     }
 
     public void positionAirCraftCarrier(){
-        airCraftCarrier = aircraftCarrier.getAircraftCarrier();
-        buttonCarrier.setGraphic(airCraftCarrier);
-        draggableMaker.makeDraggable(buttonCarrier);
 
-        onFocusedButton(buttonCarrier);
     }
 
     public void positionSubmarine(){
-        draggableMaker.makeDraggable(buttonSubmarine);
-        onFocusedButton(buttonSubmarine);
     }
 
     public void onFocusedButton(Button btn){
@@ -367,6 +361,8 @@ public class GameController {
             // Turno del jugador o de la máquina según el resultado
             if (Objects.equals(btn.getText(), "0")) {
                 game.shootingMachine(boats, playerBoard);
+                machineShipsSunken = game.getDestroyedBoatsCount(boats, playerBoard);
+                machineShipsSunkenLabel.setText(String.valueOf(machineShipsSunken));
             }
 
             // SI EL TEXTO DEL BOTON PRESIONADO ES "0" ENTONCES
@@ -415,7 +411,11 @@ public class GameController {
 
                             Button sunkBtn = matrixButtons[sunkRow][sunkCol];
                             sunkBtn.setGraphic(shipSunk.getShipSunk());
+
                         }
+                        playerShipsSunken++;
+                        playerShipsSunkenLabel.setText(String.valueOf(playerShipsSunken));
+
                     }
                     return; // No es necesario verificar más barcos
                 }
