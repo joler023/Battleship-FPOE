@@ -98,10 +98,6 @@ public class GameController {
         startGame();
     }
 
-//    public void positionShipsMachine(){
-//
-//    }
-
 
     public void placeShipsOnGrid(GridPane gridPane) throws PlacementException {
         List<String[]> shipsInfo = machineBoard.getShipsInfo(); // Obtén la información de los barcos
