@@ -5,6 +5,7 @@ import com.battleship.battleshipfpoe.view.*;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Group;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
@@ -16,6 +17,8 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,6 +29,9 @@ public class GameController {
     @FXML
     private Button buttonCarrier;
     private Group airCraftCarrier;
+    private Group submarineGroup;
+    private Group destroyerGroup;
+    private Group frigateGroup;
 
     @FXML
     private Button buttonSubmarine;
@@ -61,6 +67,8 @@ public class GameController {
     private PlayerBoard playerBoard;
     private MachineBoard machineBoard;
     private Game game;
+    private Submarine submarine;
+    private Destroyer destroyer;
 
     private boolean buttonShowPressed;
     private List<Button> buttonList;
@@ -68,7 +76,7 @@ public class GameController {
 
     public GameController() {
         playerBoard = new PlayerBoard();
-        //machineBoard = new MachineBoard();
+        machineBoard = new MachineBoard();
         draggableMaker = new DraggableMaker();
         aircraftCarrier = new AircraftCarrier();
         shipSunk = new ShipSunk();
@@ -79,6 +87,14 @@ public class GameController {
         buttonList = new ArrayList<>();
         matrixButtons = new Button[10][10];
         game = new Game();
+        submarine = new Submarine();
+        destroyer = new Destroyer();
+
+        // Inicializa las figuras de los barcos
+        airCraftCarrier = aircraftCarrier.getAircraftCarrier();
+        submarineGroup = submarine.getSubmarine();
+        destroyerGroup = destroyer.getDestroyer();
+        frigateGroup = frigate.getFrigate();
     }
 
     @FXML
@@ -88,17 +104,123 @@ public class GameController {
         positionShapes();
     }
 
-    public void setPlayer(Player player, MachineBoard machineBoard) {
+    public void setPlayer(Player player) {
         this.player = player;
-        this.machineBoard = machineBoard;
+        this.machineBoard = new MachineBoard();
         startGame();
     }
+
+//    public void positionShipsMachine(){
+//
+//    }
+
+
+    public void placeShipsOnGrid(GridPane gridPane) throws PlacementException {
+        List<String[]> shipsInfo = machineBoard.getShipsInfo(); // Obtén la información de los barcos
+
+        for (String[] ship : shipsInfo) {
+            String shipName = ship[0];
+            String start = ship[1]; // Ejemplo: "0,0"
+            String end = ship[2];   // Ejemplo: "0,3"
+
+            // Parsear coordenadas
+            String[] startCoords = start.replace("(", "").replace(")", "").trim().split(",");
+            int startRow = Integer.parseInt(startCoords[0].trim());
+            int startCol = Integer.parseInt(startCoords[1].trim());
+
+            String[] endCoords = end.replace("(", "").replace(")", "").trim().split(",");
+            int endRow = Integer.parseInt(endCoords[0].trim());
+            int endCol = Integer.parseInt(endCoords[1].trim());
+
+
+            // Determinar orientación y longitud
+            boolean isHorizontal = startRow == endRow;
+            int length = isHorizontal ? (endCol - startCol + 1) : (endRow - startRow + 1);
+
+            // Colocar el barco en el GridPane
+            placeShipOnGrid(gridPane, startRow, startCol, length, isHorizontal);
+        }
+    }
+
+    private void placeShipOnGrid(GridPane gridPane, int startRow, int startCol, int length, boolean isHorizontal) throws PlacementException {
+        // Validar índices
+        if (startRow < 0 || startCol < 0 || startRow >= gridPane.getRowCount() || startCol >= gridPane.getColumnCount()) {
+            throw new IllegalArgumentException("Los índices iniciales están fuera de los límites del GridPane.");
+        }
+
+        // Validar si cabe el barco
+        if ((isHorizontal && startCol + length > gridPane.getColumnCount()) ||
+                (!isHorizontal && startRow + length > gridPane.getRowCount())) {
+            throw new PlacementException("El barco no cabe en la posición especificada.");
+        }
+
+        // Crear el barco y configurarlo
+        Rectangle ship = new Rectangle();
+        ship.setFill(getColorByLength(length));
+        ship.setStroke(Color.BLACK);
+
+        if (isHorizontal) {
+            ship.setWidth(length * 40);
+            ship.setHeight(40);
+        } else {
+            ship.setWidth(40);
+            ship.setHeight(length * 40);
+        }
+
+        gridPane.add(ship, startCol + 1, startRow + 1);
+        GridPane.setRowSpan(ship, isHorizontal ? 1 : length);
+        GridPane.setColumnSpan(ship, isHorizontal ? length : 1);
+    }
+
+
+
+    // Método auxiliar para obtener un color según la longitud del barco
+    private Color getColorByLength(int length) {
+        switch (length) {
+            case 1:
+                return Color.GREEN; // Fragata (1 casilla)
+            case 2:
+                return Color.YELLOW; // Destructor (2 casillas)
+            case 3:
+                return Color.ORANGE; // Submarino (3 casillas)
+            case 4:
+                return Color.RED; // Portaaviones (4 casillas)
+            default:
+                return Color.GRAY; // Color por defecto para barcos desconocidos
+        }
+    }
+
+
+    private void removeAllShipsFromGrid(GridPane gridPane) {
+        // Crear una lista temporal para almacenar los nodos a eliminar
+        List<Node> nodesToRemove = new ArrayList<>();
+
+        // Recorrer todos los nodos del GridPane
+        for (Node node : gridPane.getChildren()) {
+            // Verificar si el nodo representa un barco
+            if (node instanceof Rectangle || (node.getId() != null && isShipId(node.getId()))) {
+                nodesToRemove.add(node); // Agregar a la lista de nodos a eliminar
+            }
+        }
+
+        // Eliminar todos los nodos marcados
+        gridPane.getChildren().removeAll(nodesToRemove);
+    }
+
+    // Método auxiliar para identificar nodos de barcos por ID (opcional)
+    private boolean isShipId(String id) {
+        // Define una lista de IDs válidos para los barcos
+        List<String> validShipIds = List.of("Portaviones", "Submarino", "Destructor", "Fragata");
+        return validShipIds.contains(id.toLowerCase());
+    }
+
 
     public void startGame(){
         textFieldName.setText(player.getNickname());
         createTableMachine();
         game.imprimirMatrizJugador();
     }
+
     public void paintShipsOnGrid() {
         for (Boat boat : boats) { // Iterar sobre la lista de barcos
             int[] position = boat.getPosition();
@@ -151,6 +273,7 @@ public class GameController {
     public void positionShips(){
         positionAirCraftCarrier();
         positionSubmarine();
+
     }
 
     public void positionShapes(){
@@ -162,11 +285,11 @@ public class GameController {
         fire.getChildren().add(group);
     }
 
+
     public void positionAirCraftCarrier(){
         airCraftCarrier = aircraftCarrier.getAircraftCarrier();
         buttonCarrier.setGraphic(airCraftCarrier);
         draggableMaker.makeDraggable(buttonCarrier);
-
         onFocusedButton(buttonCarrier);
     }
 
@@ -303,16 +426,20 @@ public class GameController {
 
     // Función que oculta o muestra las casillas del GridPane de la maquina
     @FXML
-    public void showMachineBoard(ActionEvent event) {
+    public void showMachineBoard(ActionEvent event) throws PlacementException {
+
         if(!buttonShowPressed){
             setImageButtonShow("/com/battleship/battleshipfpoe/images/icon-hide.png", "OCULTAR");
             showHideMachineGridPane("/com/battleship/battleshipfpoe/css/index.css","button-gridPane-hide","button-gridPane-show");
+            placeShipsOnGrid(gridPaneMachine);
             buttonShowPressed = true;
         }
         else{
             setImageButtonShow("/com/battleship/battleshipfpoe/images/icon-show.png", "MOSTRAR");
             showHideMachineGridPane("/com/battleship/battleshipfpoe/css/index.css", "button-gridPane-show", "button-gridPane-hide");
             buttonShowPressed = false;
+           // removeShipFromGrid(gridPaneMachine);
+            removeAllShipsFromGrid(gridPaneMachine);
         }
     }
 
