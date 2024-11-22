@@ -94,6 +94,8 @@ public class PreparationController implements Initializable {
         for (Boat submarine : submarines) {
             addBoatToPane(submarine);
         }
+
+        addBoatToPane(new Boat("Portaviones",firstBoatXPosition, firstBoatYPosition + (3 * verticalSpacing), 4, true, new AircraftCarrier().getAircraftCarrier()));
     }
 
 
@@ -158,6 +160,15 @@ public class PreparationController implements Initializable {
                     }else{
                         boat.setLayoutX((col * tileWidth) - 10);
                         boat.setLayoutY((row * tileHeight) + 70);
+                    }
+                    break;
+                case 4:
+                    if(boat.isHorizontal()){
+                        boat.setLayoutX((col * tileWidth) + 30);
+                        boat.setLayoutY((row * tileHeight));
+                    }else{
+                        boat.setLayoutX((col * tileWidth) - 30);
+                        boat.setLayoutY((row * tileHeight) + 90);
                     }
                     break;
                 default:

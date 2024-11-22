@@ -21,6 +21,7 @@ public class Boat extends Group implements BoatInterface {
     private boolean rotated = false;
     private boolean wasFirstMove = true;
     private final Group boatStyle; // Grupo que define el estilo visual del barco
+    private Game game;
 
     public Boat(String name, double startX, double startY, int length, boolean isHorizontal, Group boatStyle) {
         this.name = name;
@@ -29,6 +30,7 @@ public class Boat extends Group implements BoatInterface {
         this.length = length;
         this.isHorizontal = isHorizontal;
         this.boatStyle = boatStyle;
+        game = new Game();
 
         // Inicializa el barco con el estilo y posición inicial
         placeBoat(startX, startY, length, isHorizontal);
