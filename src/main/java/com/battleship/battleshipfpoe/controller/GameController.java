@@ -263,6 +263,7 @@ public class GameController {
             }
         }
     }
+
     private StringBuilder inputText = new StringBuilder();
     @FXML
     public void onKeyTyped(KeyEvent event) {
@@ -275,12 +276,6 @@ public class GameController {
         } else {
             event.consume(); // Ignorar caracteres no válidos
         }
-    }
-
-    @FXML
-    void handleClickStart(ActionEvent event) {
-        //activateMachineEvents();
-        System.out.println(player.toString());
     }
 
     @FXML
