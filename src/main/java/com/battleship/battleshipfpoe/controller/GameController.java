@@ -99,35 +99,6 @@ public class GameController {
         createTableMachine();
         game.imprimirMatrizJugador();
     }
-    public void paintShipsOnGrid() {
-        for (Boat boat : boats) { // Iterar sobre la lista de barcos
-            int[] position = boat.getPosition();
-            int row = position[0];
-            int col = position[1];
-            boolean isHorizontal = boat.isHorizontal();
-            int length = boat.getLength();
-
-            // Iterar sobre las posiciones que ocupa el barco
-            for (int i = 0; i < length; i++) {
-                int currentRow = isHorizontal ? row : row + i;
-                int currentCol = isHorizontal ? col + i : col;
-
-                // Validar que no salgan de los límites del GridPane
-                if (currentRow >= 0 && currentRow < 10 && currentCol >= 0 && currentCol < 10) {
-                    Button btn = matrixButtons[currentRow][currentCol];
-
-                    // Crear una copia visual del estilo del barco
-                    Group boatPartStyle = new Group(boat.getChildren()); // Copiar el estilo
-                    boatPartStyle.setScaleX(0.5); // Ajustar escala si es necesario
-                    boatPartStyle.setScaleY(0.5);
-
-                    // Setear el estilo en el botón
-                    btn.setGraphic(boatPartStyle);
-                    btn.setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
-                }
-            }
-        }
-    }
 
     public void setBoatsList(List<Boat> boatsList) {
         // Iterate over each boat in the list
@@ -212,19 +183,22 @@ public class GameController {
     }
 
     public void createTablePlayer() {
+        // Creamos un Pane para los barcos que se renderizará detrás del grid
+        Pane boatsPane = new Pane();
+        gridPanePlayer.getChildren().add(boatsPane); // Añadimos el Pane al GridPane del jugador
+
         // Recorremos la matriz del tablero de jugadores
         for (int i = 1; i < 11; i++) {
             for (int j = 1; j < 11; j++) {
                 Button btn = new Button();
-                Integer value = playerBoard.getMatrixPlayer().get(i - 1).get(j - 1);
-                String text = String.valueOf(value);
+                String text = "";
                 btn.setText(text);
                 btn.setPrefHeight(40);
                 btn.setPrefWidth(40);
                 btn.getStylesheets().add(String.valueOf(getClass().getResource("/com/battleship/battleshipfpoe/css/index.css")));
                 btn.getStyleClass().add("button-gridPane-show");
 
-                game.setMatrix(i-1,j-1, btn);
+                game.setMatrix(i - 1, j - 1, btn);
 
                 // Añadir el botón al GridPane
                 gridPanePlayer.add(btn, j, i);
@@ -246,19 +220,26 @@ public class GameController {
                         if (currentRow == i - 1 && currentCol == j - 1) {
                             // Crear una copia visual del estilo del barco
                             Group boatPartStyle = new Group(boat.getChildren()); // Copiar el estilo
-                            boatPartStyle.setScaleX(0.5); // Ajustar escala si es necesario
-                            boatPartStyle.setScaleY(0.5);
+                            boatPartStyle.setScaleX(0.7); // Ajustar escala si es necesario
+                            boatPartStyle.setScaleY(0.7);
 
-                            // Establecer el estilo visual en el botón
-                            btn.setGraphic(boatPartStyle);
-                            btn.setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
+                            // Establecer el estilo visual en el Pane de barcos (no en el botón)
+                            boatPartStyle.setTranslateX(j * 40); // Posicionar basado en la celda
+                            boatPartStyle.setTranslateY(i * 40);
+
+                            if(!boat.isHorizontal()) {
+                                boatPartStyle.setLayoutY(boatPartStyle.getLayoutY() + 50);
+                                boatPartStyle.setLayoutX(boatPartStyle.getLayoutX() - 50);
+                            }// Posicionar basado en la celda
+
+                            // Añadir el barco al Pane
+                            boatsPane.getChildren().add(boatPartStyle);
                         }
                     }
                 }
             }
         }
     }
-
 
 
     public void handleButtonValue(Button btn){
@@ -269,9 +250,9 @@ public class GameController {
             btn.setOnMouseClicked(null); // Desactiva el evento después de ejecutarse una vez
             btn.setOnMouseEntered(null);
 
+            System.out.println("Turno humano");
             if(Objects.equals(btn.getText(), "0")){
-                game.shootingMachine();
-                System.out.println("Turno de la maquina");
+                game.shootingMachine(boats, playerBoard);
             }
 
             // SI EL TEXTO DEL BOTON PRESIONADO ES "0" ENTONCES
