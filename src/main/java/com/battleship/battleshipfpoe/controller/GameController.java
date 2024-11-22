@@ -18,6 +18,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -164,7 +165,7 @@ public class GameController {
         for(int i=1; i<11; i++){
             for(int j=1; j<11; j++){
                 Button btn = new Button();
-                Integer value = machineBoard.getMatrixMachine().get(i-1).get(j-1);
+                Integer value = machineBoard.getMatrix().get(i-1).get(j-1);
                 String text = String.valueOf(value);
                 btn.setText(text);
                 btn.setPrefHeight(40);
@@ -242,33 +243,76 @@ public class GameController {
     }
 
 
-    public void handleButtonValue(Button btn){
+    public void handleButtonValue(Button btn) {
         btn.setOnMouseClicked(event -> {
-            pressedCell(btn);
-            btn.setContentDisplay(ContentDisplay.GRAPHIC_ONLY); // Muestra solo el contenido grafico
-            //System.out.println(btn.getText());
-            btn.setOnMouseClicked(null); // Desactiva el evento después de ejecutarse una vez
+            int row = GridPane.getRowIndex(btn) - 1;
+            int col = GridPane.getColumnIndex(btn) - 1;
+
+            // Verificar impacto y estado de los barcos
+            checkShipHitAndSunk(btn, row, col);
+
+            btn.setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
+            btn.setOnMouseClicked(null); // Desactiva el evento después de ejecutarse
             btn.setOnMouseEntered(null);
 
-            System.out.println("Turno humano");
-            if(Objects.equals(btn.getText(), "0")){
+            // Turno del jugador o de la máquina según el resultado
+            if (Objects.equals(btn.getText(), "0")) {
                 game.shootingMachine(boats, playerBoard);
             }
-
-            // SI EL TEXTO DEL BOTON PRESIONADO ES "0" ENTONCES
-            // -> DISPARAR MAQUINA ALEATORIAMENTE
-            // SINO VUELVE A TIRAR EL JUGADOR Y ADEMAS SE EJECUTA UN METODO DE VERIFICA SI UN BARCO HA SIDO
-            // DESTRUIDO Y OTRO METODO QUE VERIFIQUE SI HA DERRIBADO TODOS LOS BARCOS "RECORRE EL ARREGLO
-            // Y SI NO HAY BOTONES CON TEXTO 1 ENTONCES HA GANADO EL JUEGO"
         });
+
         btn.setOnMouseEntered(event -> {
             btn.getStylesheets().add(String.valueOf(getClass().getResource("/com/battleship/battleshipfpoe/css/styles-game.css")));
             btn.getStyleClass().add("button-Entered");
         });
+
         btn.setOnMouseExited(event -> {
             btn.getStyleClass().remove("button-Entered");
         });
     }
+
+
+    public void checkShipHitAndSunk(Button btn, int row, int col) {
+        for (Boat boat : machineBoard.getBoats()) {
+            System.out.println("Boat: "+ boat.getName() + " "+ Arrays.toString(boat.getPosition()));
+            // Obtener posición y orientación del barco
+            int[] position = boat.getPosition();
+            int boatRow = position[0];
+            int boatCol = position[1];
+            boolean isHorizontal = boat.isHorizontal();
+            int length = boat.getLength();
+
+            // Verificar si el disparo impacta en el barco
+            for (int i = 0; i < length; i++) {
+                int currentRow = isHorizontal ? boatRow : boatRow + i;
+                int currentCol = isHorizontal ? boatCol + i : boatCol;
+
+                if (currentRow == row && currentCol == col) {
+                    // Registrar impacto en el barco
+                    boat.markHit(i);
+
+                    // Cambiar el gráfico del botón al impacto
+                    btn.setGraphic(bombTouch.getBombTouch());
+
+                    // Verificar si el barco está completamente destruido
+                    if (boat.isSunk()) {
+                        for (int j = 0; j < length; j++) {
+                            int sunkRow = isHorizontal ? boatRow : boatRow + j;
+                            int sunkCol = isHorizontal ? boatCol + j : boatCol;
+
+                            Button sunkBtn = matrixButtons[sunkRow][sunkCol];
+                            sunkBtn.setGraphic(shipSunk.getShipSunk());
+                        }
+                    }
+                    return; // No es necesario verificar más barcos
+                }
+            }
+        }
+
+        // Si no impactó en ningún barco, mostrar agua
+        btn.setGraphic(waterShot.getWaterShot());
+    }
+
 
     public void pressedCell(Button btn){
         String value = btn.getText();
