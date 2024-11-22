@@ -19,8 +19,12 @@ public class WelcomeController {
     @FXML
     public void handleClickPlay(ActionEvent event) {
         WelcomeStage.deleteInstance();
-        //GameStage.getInstance();
         PreparationStage.getInstance();
+    }
+
+    @FXML
+    public void initialize() {
+        planeTextFileHandler = new PlaneTextFileHandler();
     }
 
     @FXML
@@ -29,9 +33,15 @@ public class WelcomeController {
 
         String[] data = planeTextFileHandler.readFromFile("player_data.csv");
         String nickname = data[0];
-        int warshipDestroyed = Integer.parseInt(data[1]);
+        String sunkenPlayer = data[1];
+        String sunkenMachine = data[2];
+        System.out.println("SunkenPlayer: " + sunkenPlayer + " SunkenMachine: " + sunkenMachine);
+
         Player player = new Player();
         player.setNickname(nickname);
+        player.setSunkenPlayer(sunkenPlayer);
+        player.setMachineSunken(sunkenMachine);
+
         System.out.println("Nombre al darle continue: "+player.getNickname());
 
         //MachineBoard machineBoard = (MachineBoard) serializableFileHandler.deserialize("machineBoard_data.ser");

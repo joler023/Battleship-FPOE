@@ -215,8 +215,10 @@ public class GameController {
 
     public void startGame(){
         textFieldName.setText(player.getNickname());
+        playerShipsSunkenLabel.setText(player.getPlayerSunken());
+        machineShipsSunkenLabel.setText(player.getMachineSunken());
+
         createTableMachine();
-        game.imprimirMatrizJugador();
         machineShipsSunkenLabel.textProperty().addListener((observable, oldValue, newValue) -> {
             machineShipsSunkenLabel.setText(String.valueOf(machineShipsSunken));
         });
@@ -577,8 +579,12 @@ public class GameController {
     @FXML
     public void handleClickExit(){
         player.setNickname(textFieldName.getText());
+
+        player.setSunkenPlayer(playerShipsSunkenLabel.getText());
+        player.setMachineSunken(machineShipsSunkenLabel.getText());
+
         PlaneTextFileHandler planeTextFileHandler = new PlaneTextFileHandler();
-        planeTextFileHandler.writeToFile("player_data.csv", player.getNickname() + ","+player.getShipsDestroyed());
+        planeTextFileHandler.writeToFile("player_data.csv", player.getNickname() + ","+player.getPlayerSunken() + "," +player.getMachineSunken());
 
         GameStage.deleteInstance();
         WelcomeStage.getInstance();
