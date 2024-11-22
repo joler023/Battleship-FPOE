@@ -9,6 +9,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
@@ -338,12 +339,12 @@ public class PreparationController implements Initializable {
             List<Boat> boatsList = new ArrayList<>(boatPositionsMap.keySet());
 
 
-            GameController gameController1 = GameStage.getInstance().getGameController();
+          GameController gameController1 = GameStage.getInstance().getGameController();
             PreparationStage.deleteInstance();
 
             // Pass the list of boats to the GameController
             gameController1.setPlayer(player);
             gameController1.setBoatsList(boatsList);
-
     }
+
 }
