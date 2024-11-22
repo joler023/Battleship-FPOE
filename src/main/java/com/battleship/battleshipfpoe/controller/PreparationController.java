@@ -342,7 +342,7 @@ public class PreparationController implements Initializable {
             PreparationStage.deleteInstance();
 
             // Pass the list of boats to the GameController
-            gameController1.setPlayer(player, machineBoard);
+            gameController1.setPlayer(player);
             gameController1.setBoatsList(boatsList);
 
     }
