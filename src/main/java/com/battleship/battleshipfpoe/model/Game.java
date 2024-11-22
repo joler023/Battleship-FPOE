@@ -70,6 +70,13 @@ public class Game {
         }
     }
 
+    private boolean handleShotPlayer(int row, int col, MachineBoard playerBoard) {
+        List<List<Integer>> matrix = playerBoard.getMatrix();
+        boolean isABoatThere = (matrix.get(row).get(col) == 1);
+        matrix.get(row).set(col, 2); // Marca la celda como disparada
+        return isABoatThere;
+    }
+
     private boolean handleShot(int row, int col, PlayerBoard playerBoard) {
         List<List<Integer>> matrix = playerBoard.getMatrixPlayer();
         boolean isABoatThere = (matrix.get(row).get(col) == 1);
@@ -83,7 +90,6 @@ public class Game {
         Group graphic = hit ? bombTouch.getBombTouch() : waterShot.getWaterShot();
         btn.setGraphic(graphic);
     }
-
     private void checkAndMarkDestroyedBoats(List<Boat> boats, PlayerBoard playerBoard) {
         List<List<Integer>> matrix = playerBoard.getMatrixPlayer();
 
