@@ -6,10 +6,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Group;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
-import javafx.scene.control.ContentDisplay;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
@@ -17,6 +14,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
@@ -159,7 +157,7 @@ public class GameController {
 
 
 
-    // Método auxiliar para obtener un color según la longitud del barco
+    // Metodo auxiliar para obtener un color según la longitud del barco
     private Color getColorByLength(int length) {
         switch (length) {
             case 1:
@@ -192,7 +190,7 @@ public class GameController {
         gridPane.getChildren().removeAll(nodesToRemove);
     }
 
-    // Método auxiliar para identificar nodos de barcos por ID (opcional)
+    // Metodo auxiliar para identificar nodos de barcos por ID (opcional)
     private boolean isShipId(String id) {
         // Define una lista de IDs válidos para los barcos
         List<String> validShipIds = List.of("Portaviones", "Submarino", "Destructor", "Fragata");
@@ -416,6 +414,15 @@ public class GameController {
                         playerShipsSunken++;
                         playerShipsSunkenLabel.setText(String.valueOf(playerShipsSunken));
 
+                        if (playerShipsSunken == 10) {
+                            System.out.println("Se llamo");
+                            showGameOverMessage("¡Has ganado!");
+                            blockButtons(); // Bloquear los botones
+
+                            GameStage.deleteInstance();
+                            WelcomeStage.getInstance();
+                        }
+
                     }
                     return; // No es necesario verificar más barcos
                 }
@@ -424,7 +431,58 @@ public class GameController {
 
         // Si no impactó en ningún barco, mostrar agua
         btn.setGraphic(waterShot.getWaterShot());
+        // Verificar si la máquina ha ganado
+        if (machineShipsSunken == 10) {
+            showGameOverMessage("¡Has perdido!");
+            blockButtons(); // Bloquear los botones
+            GameStage.deleteInstance();
+            WelcomeStage.getInstance();
+        }
     }
+
+    private void showGameOverMessage(String message) {
+        // Crear el diálogo
+        Dialog<Void> dialog = new Dialog<>();
+        dialog.setTitle("Fin del Juego");
+
+        // Establecer el estilo del diálogo
+        dialog.getDialogPane().getStylesheets().add(getClass().getResource("/com/battleship/battleshipfpoe/css/styles-game-over.css").toExternalForm());
+        dialog.getDialogPane().getStyleClass().add("game-over-dialog");
+
+        // Crear un contenedor para el mensaje
+        VBox vbox = new VBox();
+        vbox.setSpacing(20);
+        vbox.setStyle("-fx-alignment: center;");
+
+        // Crear el Label con el mensaje
+        Label messageLabel = new Label(message);
+        messageLabel.setStyle("-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #ff0000; -fx-alignment: center;");
+
+        // Añadir el Label al contenedor
+        vbox.getChildren().add(messageLabel);
+
+        // Agregar el contenedor al diálogo
+        dialog.getDialogPane().setContent(vbox);
+
+        // Crear y estilizar el botón de "Cerrar"
+        Button closeButton = new Button("Cerrar");
+        closeButton.setStyle("-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-size: 14px;");
+        closeButton.setOnAction(event -> dialog.close());
+        dialog.getDialogPane().getButtonTypes().clear();
+        dialog.getDialogPane().getButtonTypes().add(ButtonType.CLOSE);
+
+        // Mostrar el diálogo
+        dialog.showAndWait();
+    }
+
+
+    private void blockButtons() {
+        for (Button btn : buttonList) {
+            btn.setDisable(true); // Deshabilitar el botón
+        }
+    }
+
+
 
 
     public void pressedCell(Button btn){
@@ -440,28 +498,35 @@ public class GameController {
     }
 
     // Función que oculta o muestra las casillas del GridPane de la maquina
+    // Manejo del cambio de visibilidad del tablero de la máquina.
     @FXML
-    public void showMachineBoard(ActionEvent event) throws PlacementException {
-
-        if(!buttonShowPressed){
-            setImageButtonShow("/com/battleship/battleshipfpoe/images/icon-hide.png", "OCULTAR");
-            showHideMachineGridPane("/com/battleship/battleshipfpoe/css/index.css","button-gridPane-hide","button-gridPane-show");
-            placeShipsOnGrid(gridPaneMachine);
-            buttonShowPressed = true;
-        }
-        else{
+    public void showMachineBoard(ActionEvent event) {
+        if (!buttonShowPressed) {
+            try {
+                setImageButtonShow("/com/battleship/battleshipfpoe/images/icon-hide.png", "OCULTAR");
+                showHideMachineGridPane("/com/battleship/battleshipfpoe/css/index.css", "button-gridPane-hide", "button-gridPane-show");
+                buttonShowPressed = true;
+            } catch (RuntimeException e) {
+                // EXCEPCIÓN NO MARCADA: Maneja errores al cambiar visibilidad.
+                System.err.println("Error cambiando la visibilidad del tablero: " + e.getMessage());
+            }
+        } else {
             setImageButtonShow("/com/battleship/battleshipfpoe/images/icon-show.png", "MOSTRAR");
             showHideMachineGridPane("/com/battleship/battleshipfpoe/css/index.css", "button-gridPane-show", "button-gridPane-hide");
             buttonShowPressed = false;
-           // removeShipFromGrid(gridPaneMachine);
-            removeAllShipsFromGrid(gridPaneMachine);
         }
     }
 
-    public void setImageButtonShow(String url, String message){
-        Image image = new Image(getClass().getResource(url).toExternalForm());
-        imageShow.setImage(image);
-        labelShow.setText(message);
+    public void setImageButtonShow(String url, String message) {
+        try {
+            // EXCEPCIÓN MARCADA: Manejo de recursos gráficos (como imágenes).
+            Image image = new Image(getClass().getResource(url).toExternalForm());
+            imageShow.setImage(image);
+            labelShow.setText(message);
+        } catch (Exception e) {
+            // Registra el error pero no interrumpe el juego.
+            System.err.println("Error cambiando la imagen del botón: " + e.getMessage());
+        }
     }
 
     public void showHideMachineGridPane(String url, String css1, String css2){
