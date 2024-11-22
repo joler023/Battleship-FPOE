@@ -35,6 +35,36 @@ public class Game {
             }
         }
     }
+    public int getDestroyedBoatsCount(List<Boat> boats, PlayerBoard playerBoard) {
+        int destroyedCount = 0;
+
+        List<List<Integer>> matrix = playerBoard.getMatrixPlayer();
+
+        for (Boat boat : boats) {
+            int[] position = boat.getPosition();
+            if (position[0] == -1 || position[1] == -1) continue; // Ignorar barcos no colocados
+
+            // Verifica si todas las celdas del barco están marcadas como hundidas (3)
+            boolean isDestroyed = true;
+            for (int i = 0; i < boat.getLength(); i++) {
+                int cellValue = boat.isHorizontal()
+                        ? matrix.get(position[0]).get(position[1] + i)
+                        : matrix.get(position[0] + i).get(position[1]);
+
+                if (cellValue != 3) {
+                    isDestroyed = false;
+                    break;
+                }
+            }
+
+            if (isDestroyed) {
+                destroyedCount++; // Incrementa el contador si el barco está hundido
+            }
+        }
+
+        return destroyedCount; // Devuelve el número de barcos derribados
+    }
+
 
     public void shootingMachine(List<Boat> boats, PlayerBoard playerBoard) {
         System.out.println("Turno de la máquina");
@@ -89,13 +119,6 @@ public class Game {
         if (playerBoardShotValue == 2 || playerBoardShotValue == 3 || playerBoardShotValue == -1) {
             throw new InvalidShotException("Disparo en una celda ya atacada o fuera de límites.");
         }
-    }
-
-    private boolean handleShotPlayer(int row, int col, MachineBoard playerBoard) {
-        List<List<Integer>> matrix = playerBoard.getMatrix();
-        boolean isABoatThere = (matrix.get(row).get(col) == 1);
-        matrix.get(row).set(col, 2); // Marca la celda como disparada
-        return isABoatThere;
     }
 
     private boolean handleShot(int row, int col, PlayerBoard playerBoard) {
