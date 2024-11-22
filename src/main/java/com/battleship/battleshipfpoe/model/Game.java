@@ -74,29 +74,50 @@ public class Game {
             int row = random.nextInt(10); // Índice aleatorio para fila
             int col = random.nextInt(10); // Índice aleatorio para columna
 
-            int playerBoardShotValue = playerBoard.getMatrixPlayer().get(row).get(col);
+            try {
+                // Llamar al metodo checkIfShotIsValid para verificar si el disparo es valido
+                checkIfShotIsValid(row, col, playerBoard);
 
-            // Salta si la celda ya fue atacada
-            if (playerBoardShotValue == 2 || playerBoardShotValue == 3 || playerBoardShotValue == -1) {
-                continue;
+                int playerBoardShotValue = playerBoard.getMatrixPlayer().get(row).get(col);
+
+                // Realiza el disparo
+                boolean hit = handleShot(row, col, playerBoard);
+
+                // Actualiza la interfaz gráfica
+                updateCellGraphic(row, col, hit);
+
+                // Si se golpeó un barco, verifica si alguno está completamente destruido
+                if (hit) {
+                    checkAndMarkDestroyedBoats(boats, playerBoard);
+                }
+
+                // Si no golpea un barco, termina el turno
+                if (!hit) {
+                    playerBoard.getMatrixPlayer().get(row).set(col, -1);
+                    break;
+                }
+
+            } catch (InvalidShotException e) {
+                // Si el disparo no es válido, se continúa con un nuevo intento
+                System.err.println(e.getMessage());
             }
+        }
+    }
 
-            // Realiza el disparo
-            boolean hit = handleShot(row, col, playerBoard);
+    // EXCEPCIÓN PROPIA: Para manejar disparos inválidos
+    public static class InvalidShotException extends Exception {
+        public InvalidShotException(String message) {
+            super(message);
+        }
+    }
 
-            // Actualiza la interfaz gráfica
-            updateCellGraphic(row, col, hit);
+    // Metodo para verificar si el disparo es válido
+    private void checkIfShotIsValid(int row, int col, PlayerBoard playerBoard) throws InvalidShotException {
+        int playerBoardShotValue = playerBoard.getMatrixPlayer().get(row).get(col);
 
-            // Si se golpeó un barco, verifica si alguno está completamente destruido
-            if (hit) {
-                checkAndMarkDestroyedBoats(boats, playerBoard);
-            }
-
-            // Si no golpea un barco, termina el turno
-            if (!hit) {
-                playerBoard.getMatrixPlayer().get(row).set(col, -1);
-                break;
-            }
+        // Si la celda ya fue atacada, lanzamos la excepción
+        if (playerBoardShotValue == 2 || playerBoardShotValue == 3 || playerBoardShotValue == -1) {
+            throw new InvalidShotException("Disparo en una celda ya atacada o fuera de límites.");
         }
     }
 
