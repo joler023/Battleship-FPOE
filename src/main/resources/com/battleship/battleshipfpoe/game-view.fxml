@@ -54,7 +54,7 @@
                         <Insets bottom="10.0" />
                      </VBox.margin>
                   </Label>
-                  <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="30.0" prefWidth="30.0" styleClass="label-Game" stylesheets="@css/styles-game.css" text="0" textAlignment="CENTER">
+                  <Label fx:id="playerShipsSunkenLabel" alignment="CENTER" contentDisplay="CENTER" prefHeight="30.0" prefWidth="30.0" styleClass="label-Game" stylesheets="@css/styles-game.css" text="0" textAlignment="CENTER">
                      <font>
                         <Font name="Bebas Neue Regular" size="20.0" />
                      </font>
@@ -75,7 +75,7 @@
                         <String fx:value="label-Machine" />
                      </styleClass>
                   </Label>
-                  <Label alignment="CENTER" prefHeight="30.0" prefWidth="30.0" stylesheets="@css/styles-game.css" text="0">
+                  <Label fx:id="machineShipsSunkenLabel" alignment="CENTER" prefHeight="30.0" prefWidth="30.0" stylesheets="@css/styles-game.css" text="0">
                      <font>
                         <Font name="Bebas Neue Regular" size="20.0" />
                      </font>
@@ -327,8 +327,6 @@
                   </Label>
                </children>
             </GridPane>
-            <Button fx:id="buttonCarrier" layoutX="228.0" layoutY="37.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="150.0" />
-            <Button fx:id="buttonSubmarine" layoutX="419.0" layoutY="35.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="155.0" />
          </children>
       </AnchorPane>
    </children>
