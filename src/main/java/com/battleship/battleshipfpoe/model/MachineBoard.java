@@ -11,12 +11,37 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+/**
+ * Represents the machine's game board, including the placement of ships and the management of the game matrix.
+ * This class is responsible for generating the board, placing ships, and managing ship positions.
+ *
+ * @author Maycol Andres Taquez Carlosama
+ * @code 2375000
+ * @author Santiago Valencia Aguiño
+ * @code 2343334
+ * @author Joel Andres Ochoa Sará
+ * @code 2341100
+ * @version 1.0
+ * @since 1.0
+ */
 public class MachineBoard implements Serializable {
     private List<List<Integer>> matrixMachine;
     private Random rand;
-    private List<String[]> shipsInfo; // Lista para almacenar información de los barcos
-    private List<Boat> boats; // Lista para almacenar objetos Boat
+    private List<String[]> shipsInfo; // List to store ship information
+    private List<Boat> boats;  // List to store Boat objects
 
+    /**
+     * Constructor for the {@link MachineBoard} class.
+     * Initializes the game board for the machine, including the board matrix,
+     * a random number generator, and lists to store ship information and boats.
+     * This constructor also generates the initial board, places the ships,
+     * and prints the details of the placed ships.
+     *
+     * @since 1.0
+     * @see #generateBoardMachine()
+     * @see #placeShips()
+     * @see #printShipsInfo()
+     */
     public MachineBoard() {
         matrixMachine = new ArrayList<>();
         rand = new Random();
@@ -27,6 +52,14 @@ public class MachineBoard implements Serializable {
         printShipsInfo();
     }
 
+    /**
+     * Generates an empty 10x10 matrix to represent the machine's game board.
+     * Each cell in the matrix is initialized to 0, which represents water.
+     * This method ensures that the machine's board is ready for ship placement.
+     *
+     * @since 1.0
+     * @see #placeShips()
+     */
     public void generateBoardMachine() {
         for (int i = 0; i < 10; i++) {
             List<Integer> row = new ArrayList<>();
@@ -37,39 +70,59 @@ public class MachineBoard implements Serializable {
         }
     }
 
-    // Verifica si una casilla está vacía
+    // Check if a box is empty
+    /**
+     * Checks if a position is valid for placing a ship on the board.
+     * It verifies whether the ship fits within the bounds of the board and if the cells are empty.
+     *
+     * @param x the starting x-coordinate (row index).
+     * @param y the starting y-coordinate (column index).
+     * @param size the size of the ship to place.
+     * @param isHorizontal true if the ship is to be placed horizontally, false for vertical.
+     * @return true if the position is valid, false otherwise.
+     * @since 1.0
+     */
     private boolean isValidPosition(int x, int y, int size, boolean isHorizontal) {
-        // Verificar si la posición está dentro de los límites de la matriz
+        // Check if the position is within the bounds of the matrix
         if (isHorizontal) {
-            if (y + size > 10) return false; // Excede el borde derecho
+            if (y + size > 10) return false; // Exceeds the right border
             for (int j = y; j < y + size; j++) {
-                if (matrixMachine.get(x).get(j) == 1) return false; // Casilla ocupada
+                if (matrixMachine.get(x).get(j) == 1) return false; // Cell occupied
             }
         } else {
-            if (x + size > 10) return false; // Excede el borde inferior
+            if (x + size > 10) return false; // Exceeds the bottom border
             for (int i = x; i < x + size; i++) {
-                if (matrixMachine.get(i).get(y) == 1) return false; // Casilla ocupada
+                if (matrixMachine.get(i).get(y) == 1) return false; // Cell occupied
             }
         }
         return true;
     }
 
-    // Se posiciona un barco, según el tamaño del argumento y su nombre
+    // A ship is positioned, depending on the size of the argument and its name
+    /**
+     * Places a ship on the board at a random valid position.
+     * The ship is placed horizontally or vertically, depending on the random choice.
+     *
+     * @param size the size of the ship (number of cells).
+     * @param shipName the name of the ship.
+     * @param boatStyle the graphical representation of the boat.
+     * @since 1.0
+     */
     private void placeShip(int size, String shipName, Group boatStyle) {
         boolean placed = false;
         while (!placed) {
-            // Seleccionar una posición aleatoria (x, y) y una dirección (horizontal o vertical)
+            // Select a random position (x, y) and direction (horizontal or vertical)
             int x = rand.nextInt(10);
             int y = rand.nextInt(10);
             boolean isHorizontal = rand.nextBoolean();
 
-            // Verificar si el barco se puede colocar en la posición seleccionada
+            // Check if the ship can be placed at the selected position
             if (isValidPosition(x, y, size, isHorizontal)) {
                 Boat boat = new Boat(shipName, x, y, size, isHorizontal, boatStyle);
 
                 boat.setPosition(x,y);
 
-                // Colocar el barco (marcar las casillas con 1)
+                // Place the ship (mark the cells with 1)
                 if (isHorizontal) {
                     for (int j = y; j < y + size; j++) {
                         matrixMachine.get(x).set(j, 1);
@@ -80,64 +133,93 @@ public class MachineBoard implements Serializable {
                     }
                 }
 
-                // Registrar información del barco (posición inicial y final)
+                // Register ship information (initial and final positions)
                 String[] shipInfo = new String[3];
+                shipInfo[0] = shipName; // Ship name
+                shipInfo[1] = "(" + x + "," + y + ")"; // Initial position
+                shipInfo[2] = "(" + (x + size - 1) + "," + y + ")"; // Final position
+                shipsInfo.add(shipInfo); // Add ship info to the list
 
-                shipInfo[0] = shipName; // Nombre del barco
-                shipInfo[1] = "(" + x + "," + y + ")"; // Posición inicial
-
-// Determinar posición final según la orientación
-                if (isHorizontal) {
-                    shipInfo[2] = "(" + x + "," + (y + size - 1) + ")"; // Incrementar solo la columna
-                } else {
-                    shipInfo[2] = "(" + (x + size - 1) + "," + y + ")"; // Incrementar solo la fila
-
-                }
-                    shipsInfo.add(shipInfo); // Agregar información a la lista
-
-                // Agregar el objeto Boat a la lista de barcos
+                // Add the Boat object to the list of boats
                 boats.add(boat);
-                placed = true; // Marcar que el barco ha sido colocado
+                placed = true; // Mark that the ship has been placed
             }
         }
     }
 
+    /**
+     * Creates the graphical style for the ship based on its name.
+     * Currently, this method returns a placeholder group. The style of the boat can be customized based on the ship type.
+     *
+     * @param shipName the name of the ship.
+     * @return a {@link Group} representing the graphical style of the ship.
+     * @since 1.0
+     */
     private Group createBoatStyle(String shipName) {
-        // Aquí puedes crear el estilo visual del barco según el nombre.
-        // Por ejemplo, dependiendo del tipo de barco (Portaviones, Submarino, etc.), puedes
-        // devolver un estilo diferente. Aquí se asume que es una implementación básica.
-        return new Group(); // Placeholder, debes definir cómo crear el estilo
+        // Here you can create the visual style of the ship based on the name.
+        // For example, depending on the type of ship (Aircraft Carrier, Submarine, etc.), you can
+        // return a different style. This is assumed to be a basic implementation.
+        return new Group(); // Placeholder, define how to create the style
     }
 
-    // Se coloca los barcos en la matriz
+    /**
+     * Places all ships on the machine's board.
+     * This method places ships with varying sizes and names at random valid positions on the board.
+     *
+     * @since 1.0
+     * @see #placeShip(int, String, Group)
+     */
     public void placeShips() {
-        placeShip(4, "Portaviones", new AircraftCarrier().getAircraftCarrier()); // Coloca el primer portaviones (4 casillas)
-        placeShip( 3, "Submarino", new Submarine().getSubmarine()); // Coloca el primer submarino (3 casillas)
-        placeShip(3, "Submarino", new Submarine().getSubmarine()); // Coloca el segundo submarino (3 casillas)
-        placeShip(2, "Destructor", new Destroyer().getDestroyer()); // Coloca el primer destructor (2 casillas)
-        placeShip(2, "Destructor", new Destroyer().getDestroyer()); // Coloca el segundo destructor (2 casillas)
-        placeShip(2, "Destructor", new Destroyer().getDestroyer()); // Coloca el tercer destructor (2 casillas)
-        placeShip(1, "Fragata", new Frigate().getFrigate()); // Coloca el primer fragata (1 casilla)
-        placeShip(1, "Fragata", new Frigate().getFrigate()); // Coloca el segundo fragata (1 casilla)
-        placeShip(1, "Fragata", new Frigate().getFrigate()); // Coloca el tercer fragata (1 casilla)
-        placeShip(1, "Fragata", new Frigate().getFrigate()); // Coloca el cuarto fragata (1 casilla)
+        placeShip(4, "Portaviones", new AircraftCarrier().getAircraftCarrier()); // Places the first aircraft carrier (4 cells)
+        placeShip( 3, "Submarino", new Submarine().getSubmarine()); // Places the first submarine (3 cells)
+        placeShip(3, "Submarino", new Submarine().getSubmarine()); // Places the second submarine (3 cells)
+        placeShip(2, "Destructor", new Destroyer().getDestroyer()); // Places the first destroyer (2 cells)
+        placeShip(2, "Destructor", new Destroyer().getDestroyer()); // Places the second destroyer (2 cells)
+        placeShip(2, "Destructor", new Destroyer().getDestroyer()); // Places the third destroyer (2 cells)
+        placeShip(1, "Fragata", new Frigate().getFrigate());  // Places the first frigate (1 cell)
+        placeShip(1, "Fragata", new Frigate().getFrigate()); // Places the second frigate (1 cell)
+        placeShip(1, "Fragata", new Frigate().getFrigate()); // Places the third frigate (1 cell)
+        placeShip(1, "Fragata", new Frigate().getFrigate()); // Places the fourth frigate (1 cell)
     }
 
-    // Metodo para imprimir la información de los barcos colocados
+    /**
+     * Prints information about the ships placed on the board.
+     * This method prints the name of the ship and its initial and final positions.
+     *
+     * @since 1.0
+     */
     public void printShipsInfo() {
-        // SERIALIZAR POSICIONES DE LOS MATRIZ CON LAS POCISIONES DE LOS BARCOS
+        // Print ship positions with information about each ship
+        // SERIALIZE ARRAY POSITIONS WITH SHIP POSITIONS
         for (String[] ship : shipsInfo) {
             System.out.println("Barco: " + ship[0] + ", Inicio: " + ship[1] + ", Fin: " + ship[2]); // Imprimir información del barco
         }
     }
 
+    /**
+     * Gets the machine's board matrix.
+     *
+     * @return a {@link List} representing the 10x10 matrix of the machine's board.
+     * @since 1.0
+     */
     public List<List<Integer>> getMatrix() {
         return matrixMachine;
     }
+    /**
+     * Gets the list of ship information on the machine's board.
+     *
+     * @return a {@link List} of ship information, where each entry contains the ship's name and its positions.
+     * @since 1.0
+     */
     public List<String[]> getShipsInfo() {
         return shipsInfo; // Retorna la lista con la información de los barcos
     }
-
+    /**
+     * Gets the list of boats on the machine's board.
+     *
+     * @return a {@link List} of {@link Boat} objects representing the boats on the machine's board.
+     * @since 1.0
+     */
     public List<Boat> getBoats() {
         return boats;
     }
