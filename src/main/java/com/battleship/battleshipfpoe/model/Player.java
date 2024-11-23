@@ -2,7 +2,7 @@ package com.battleship.battleshipfpoe.model;
 
 import java.io.Serializable;
 
-public class Player{
+public class Player implements IPlayer{
     private String nickname;
     private String playerSunken;
     private String machineSunken;
