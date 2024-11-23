@@ -20,6 +20,21 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.*;
 
+/**
+ * Controller class for the preparation phase of the Battleship game.
+ * Handles the initialization of the board, positioning of boats, and preparation
+ * for transitioning to the game stage.
+ *
+ * @author Maycol Andres Taquez Carlosama
+ * @code 2375000
+ * @author Santiago Valencia Aguiño
+ * @code 2343334
+ * @author Joel Andres Ochoa Sará
+ * @code 2341100
+ * @version 1.0
+ * @since 1.0
+ */
+
 public class PreparationController implements Initializable {
 
     @FXML
@@ -29,7 +44,22 @@ public class PreparationController implements Initializable {
     final boolean[] initialOrientation = new boolean[1];
     private boolean wasSnapped = false; // Nueva variable
 
+    /**
+     * Handler for serializable files.
+     * Manages the serialization and deserialization of data in the Battleship game.
+     *
+     * @serial Handles serialized data storage and retrieval.
+     * @since 1.0
+     */
     private SerializableFileHandler serializableFileHandler;
+
+    /**
+     * Handler for plain text files.
+     * Provides support for reading and writing game data in plain text format.
+     *
+     * @serial Handles plain text data storage.
+     * @since 1.0
+     */
     private PlaneTextFileHandler planeTextFileHandler;
     private GameController gameController;
 
