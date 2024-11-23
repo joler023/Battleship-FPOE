@@ -64,7 +64,27 @@ public class GameController {
     private boolean buttonShowPressed;
     private List<Button> buttonList;
     private Button[][] matrixButtons;
+    /**
+     * Controller class for managing the Battleship game.
+     * This class handles the interaction between the player's board, the machine's board,
+     * and the game logic, enabling gameplay functionality such as ship placement,
+     * attack management, and game status updates.
+     *
+     * @author Maycol Andres Taquez Carlosama
+     * @code 2375000
+     * @author Santiago Valencia Aguiño
+     * @code 2343334
+     * @author Joel Andres Ochoa Sará
+     * @code 2341100
+     * @version 1.0
+     * @since 1.0
+     */
 
+    /**
+     * Constructs a GameController instance and initializes the necessary game components.
+     *
+     * @since 1.0
+     */
     public GameController() {
         playerBoard = new PlayerBoard();
         //machineBoard = new MachineBoard();
@@ -79,7 +99,11 @@ public class GameController {
         matrixButtons = new Button[10][10];
         game = new Game();
     }
-
+    /**
+     * Initializes the game controller by setting up ship positions and visual elements.
+     *
+     * @since 1.0
+     */
     @FXML
     public void initialize(){
         //createTablePlayer();
@@ -87,16 +111,27 @@ public class GameController {
         positionShapes();
     }
 
+    /**
+     * Sets the player instance for the game and starts the game.
+     *
+     * @param player the Player instance to be set.
+     * @since 1.0
+     */
     public void setPlayer(Player player) {
         this.player = player;
         this.machineBoard = new MachineBoard();
         startGame();
     }
 
-//    public void positionShipsMachine(){
-//
-//    }
 
+    /**
+     * Places ships on the grid for the machine's board based on predefined positions.
+     *
+     * @param gridPane the GridPane where ships are to be placed.
+     * @throws PlacementException if a ship cannot be placed due to invalid coordinates.
+     * @since 1.0
+     * @see MachineBoard
+     */
 
     public void placeShipsOnGrid(GridPane gridPane) throws PlacementException {
         List<String[]> shipsInfo = machineBoard.getShipsInfo(); // Obtén la información de los barcos
@@ -106,22 +141,22 @@ public class GameController {
             String start = ship[1]; // Ejemplo: "0,0"
             String end = ship[2];   // Ejemplo: "0,3"
 
-            // Parsear coordenadas
+            // Parse ship's starting coordinates
             String[] startCoords = start.replace("(", "").replace(")", "").trim().split(",");
             int startRow = Integer.parseInt(startCoords[0].trim());
             int startCol = Integer.parseInt(startCoords[1].trim());
-
+            // Parse ship's ending coordinates
             String[] endCoords = end.replace("(", "").replace(")", "").trim().split(",");
             int endRow = Integer.parseInt(endCoords[0].trim());
             int endCol = Integer.parseInt(endCoords[1].trim());
 
-            // Normalizar coordenadas
+            // Normalize coordinates
             int normalizedStartRow = Math.min(startRow, endRow);
             int normalizedStartCol = Math.min(startCol, endCol);
             int normalizedEndRow = Math.max(startRow, endRow);
             int normalizedEndCol = Math.max(startCol, endCol);
 
-            // Determinar orientación y longitud
+            // Determine orientation and length
             boolean isHorizontal = normalizedStartRow == normalizedEndRow;
             int length = isHorizontal ? (normalizedEndCol - normalizedStartCol + 1) : (normalizedEndRow - normalizedStartRow + 1);
 
@@ -130,89 +165,132 @@ public class GameController {
             System.out.println("Fin: (" + normalizedEndRow + ", " + normalizedEndCol + ")");
             System.out.println("Longitud: " + length + ", Horizontal: " + isHorizontal);
 
-            // Colocar el barco en el GridPane
+            // Place the ship on the GridPane
             placeShipOnGrid(gridPane, normalizedStartRow, normalizedStartCol, length, isHorizontal);
         }
     }
 
+    /**
+     * Places a single ship on the grid based on its starting position, length, and orientation.
+     *
+     * @param gridPane the GridPane where the ship will be placed.
+     * @param startRow the starting row index of the ship.
+     * @param startCol the starting column index of the ship.
+     * @param length the length of the ship.
+     * @param isHorizontal true if the ship is placed horizontally, false otherwise.
+     * @throws PlacementException if the ship cannot fit in the specified location.
+     * @since 1.0
+     */
     private void placeShipOnGrid(GridPane gridPane, int startRow, int startCol, int length, boolean isHorizontal) throws PlacementException {
-        // Validar índices
+        // Validate starting indices are within bounds
         if (startRow < 0 || startCol < 0 || startRow >= gridPane.getRowCount() || startCol >= gridPane.getColumnCount()) {
             throw new IllegalArgumentException("Los índices iniciales están fuera de los límites del GridPane.");
         }
 
-        // Validar si cabe el barco
+        // Check if the ship fits in the specified position
         if ((isHorizontal && startCol + length > gridPane.getColumnCount()) ||
                 (!isHorizontal && startRow + length > gridPane.getRowCount())) {
             throw new PlacementException("El barco no cabe en la posición especificada.");
         }
 
-        // Crear el barco y configurarlo
+        // Create the ship and configure it
         Rectangle ship = new Rectangle();
-        ship.setFill(getColorByLength(length)); // Método que retorna un color según la longitud
+        ship.setFill(getColorByLength(length)); // Metodo que retorna un color según la longitud
         ship.setStroke(Color.BLACK);
 
-        // Ajustar dimensiones del rectángulo
+        // Adjust dimensions of the rectangle
         if (isHorizontal) {
-            ship.setWidth(length * 40); // Multiplicar el ancho por el tamaño de la celda
-            ship.setHeight(40);        // Altura fija de una celda
+            ship.setWidth(length * 40); // Multiply the width by the cell size
+            ship.setHeight(40);        // Fixed height of a cell
         } else {
-            ship.setWidth(40);         // Ancho fijo de una celda
-            ship.setHeight(length * 40); // Multiplicar la altura por el tamaño de la celda
+            ship.setWidth(40);         // Fixed width of a cell
+            ship.setHeight(length * 40); // Multiply the height by the cell size
         }
 
-        // Añadir el rectángulo al GridPane
-        gridPane.add(ship, startCol+1, startRow+1); // Usar índices exactos (sin sumar 1)
+        // Add the rectangle to the GridPane
+        gridPane.add(ship, startCol+1, startRow+1); // Use exact indexes (without adding 1)
         if (isHorizontal) {
-            GridPane.setColumnSpan(ship, length); // Ajustar el span horizontal
+            GridPane.setColumnSpan(ship, length); // Adjust the horizontal span
         } else {
-            GridPane.setRowSpan(ship, length);    // Ajustar el span vertical
+            GridPane.setRowSpan(ship, length);    // Adjust the vertical span
         }
     }
 
 
 
-    // Metodo auxiliar para obtener un color según la longitud del barco
+    // Auxiliary method to obtain a color according to the length of the boat
+    /**
+     * Gets the color corresponding to the length of a ship.
+     *
+     * @param length the length of the ship.
+     * @return a Color object representing the color of the ship.
+     * @since 1.0
+     */
     private Color getColorByLength(int length) {
         switch (length) {
             case 1:
-                return Color.GREEN; // Fragata (1 casilla)
+                return Color.GREEN; // Frigate (1 cell)
             case 2:
-                return Color.YELLOW; // Destructor (2 casillas)
+                return Color.YELLOW; // Destroyer (2 cells)
             case 3:
-                return Color.ORANGE; // Submarino (3 casillas)
+                return Color.ORANGE;  // Submarine (3 cells)
             case 4:
-                return Color.RED; // Portaaviones (4 casillas)
+                return Color.RED; // Aircraft carrier (4 cells)
             default:
-                return Color.GRAY; // Color por defecto para barcos desconocidos
+                return Color.GRAY; // Default color for unknown ships
         }
     }
 
-
+    /**
+     * Removes all ship-related nodes from the specified GridPane.
+     * Ship nodes are identified either by their type (Rectangle) or by their ID.
+     *
+     * @param gridPane the GridPane from which ship nodes will be removed
+     * @throws NullPointerException if the provided gridPane is null
+     * @see #isShipId(String)
+     * @since 1.0
+     */
     private void removeAllShipsFromGrid(GridPane gridPane) {
-        // Crear una lista temporal para almacenar los nodos a eliminar
+        // Create a temporary list to store nodes to be removed
         List<Node> nodesToRemove = new ArrayList<>();
 
-        // Recorrer todos los nodos del GridPane
+        // Iterate through all nodes in the GridPane
         for (Node node : gridPane.getChildren()) {
-            // Verificar si el nodo representa un barco
+            // Check if the node represents a ship
             if (node instanceof Rectangle || (node.getId() != null && isShipId(node.getId()))) {
                 nodesToRemove.add(node); // Agregar a la lista de nodos a eliminar
             }
         }
 
-        // Eliminar todos los nodos marcados
+        // Remove all marked nodes
         gridPane.getChildren().removeAll(nodesToRemove);
     }
 
-    // Metodo auxiliar para identificar nodos de barcos por ID (opcional)
+    // Auxiliary method to identify ship nodes by ID (optional)
+    /**
+     * Helper method to determine if a given ID corresponds to a ship.
+     * Ship IDs are case-insensitive and must match predefined valid ship types.
+     *
+     * @param id the ID to be checked
+     * @return {@code true} if the ID matches a valid ship type, {@code false} otherwise
+     * @see List
+     * @since 1.0
+     */
     private boolean isShipId(String id) {
-        // Define una lista de IDs válidos para los barcos
+        // Define a list of valid IDs for ships
         List<String> validShipIds = List.of("Portaviones", "Submarino", "Destructor", "Fragata");
         return validShipIds.contains(id.toLowerCase());
     }
 
-
+    /**
+     * Starts the game by initializing the player's nickname and setting up the machine's board.
+     * Also establishes listeners for updating the state of the game.
+     *
+     * @since 1.0
+     * @see PlayerBoard
+     * @see MachineBoard
+     * @throws IllegalStateException if the game cannot start due to invalid player or machine board state.
+     */
     public void startGame(){
         textFieldName.setText(player.getNickname());
         playerShipsSunkenLabel.setText(player.getPlayerSunken());
@@ -224,16 +302,25 @@ public class GameController {
         });
     }
 
+    /**
+     * Sets the list of boats for the player's board and places them on the grid.
+     *
+     * @param boatsList the list of Boat objects to be placed on the player's board.
+     * @since 1.0
+     * @see Boat
+     * @see PlayerBoard#placeShip(int, int, int, boolean)
+     * @throws IllegalArgumentException if the boat positions are invalid.
+     */
     public void setBoatsList(List<Boat> boatsList) {
         // Iterate over each boat in the list
         for (Boat boat : boatsList) {
-            // Obtener posición y orientación
+            // Get position and orientation
             int[] position = boat.getPosition();
             int row = position[0];
             int col = position[1];
             boolean isHorizontal = boat.isHorizontal();
 
-            // Colocar el barco en el tablero
+            // Place the boat on the player's board
             System.out.println("Colocando barco " +  boat + " en fila: " + row + ", columna: " + col);
             playerBoard.placeShip(row, col, boat.getLength(), isHorizontal);
         }
@@ -243,11 +330,24 @@ public class GameController {
         createTablePlayer();
     }
 
+    /**
+     * Positions the player's aircraft carrier and submarine on the board.
+     *
+     * @since 1.0
+     */
     public void positionShips(){
         positionAirCraftCarrier();
         positionSubmarine();
     }
 
+    /**
+     * Adds visual elements (water, bomb, and fire effects) to the player's board.
+     *
+     * @since 1.0
+     * @see WaterShot
+     * @see BombTouch
+     * @see ShipSunk
+     */
     public void positionShapes(){
         Group group = waterShot.getWaterShot();
         water.getChildren().add(group);
@@ -257,13 +357,30 @@ public class GameController {
         fire.getChildren().add(group);
     }
 
+    /**
+     * Positions the aircraft carrier on the board.
+     *
+     * @since 1.0
+     */
     public void positionAirCraftCarrier(){
 
     }
 
+    /**
+     * Positions the submarine on the board.
+     *
+     * @since 1.0
+     */
     public void positionSubmarine(){
     }
 
+    /**
+     * Configures a button to handle focus and rotation events when the space key is pressed.
+     *
+     * @param btn the Button to be configured with focus and rotation events.
+     * @since 1.0
+     * @throws IllegalArgumentException if the button is null or has invalid properties.
+     */
     public void onFocusedButton(Button btn){
         btn.focusedProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue) {
@@ -278,6 +395,14 @@ public class GameController {
         });
     }
 
+    /**
+     * Creates the machine's game grid by generating buttons with appropriate styles and functionalities.
+     * The machine's board state is serialized for persistence.
+     *
+     * @since 1.0
+     * @see MachineBoard
+     * @serial Serializes the MachineBoard object to save its state.
+     */
     public void createTableMachine(){
         for(int i=1; i<11; i++){
             for(int j=1; j<11; j++){
@@ -289,23 +414,27 @@ public class GameController {
                 btn.setPrefWidth(40);
                 btn.getStylesheets().add(String.valueOf(getClass().getResource("/com/battleship/battleshipfpoe/css/index.css")));
                 btn.getStyleClass().add("button-gridPane-hide");
-                gridPaneMachine.add(btn, j, i); // Agrega los botones creados al GridPane Machine
-                buttonList.add(btn); // Matriz para establecer eventos a cada boton.
-                matrixButtons[i-1][j-1] = btn; // Matriz para agregar los botones creados
+                gridPaneMachine.add(btn, j, i); // Add the button to the machine's grid
+                buttonList.add(btn); // Store the button in the list and matrix for event
+                matrixButtons[i-1][j-1] = btn; // Add event handling for button actions
                 handleButtonValue(btn);
             }
         }
-        // Serializar el objeto MachineBoard
-//        SerializableFileHandler serializableFileHandler = new SerializableFileHandler();
-//        serializableFileHandler.serialize("machineBoard_data.ser", machineBoard);
+
     }
 
+    /**
+     * Creates the player's game grid by initializing buttons and rendering ships visually on the board.
+     *
+     * @since 1.0
+     * @see Boat
+     */
     public void createTablePlayer() {
-        // Creamos un Pane para los barcos que se renderizará detrás del grid
+        // Create a Pane for the boats that will render behind the grid
         Pane boatsPane = new Pane();
-        gridPanePlayer.getChildren().add(boatsPane); // Añadimos el Pane al GridPane del jugador
+        gridPanePlayer.getChildren().add(boatsPane); // Add the Pane to the player's GridPane
 
-        // Recorremos la matriz del tablero de jugadores
+        // Iterate through the player's board matrix
         for (int i = 1; i < 11; i++) {
             for (int j = 1; j < 11; j++) {
                 Button btn = new Button();
@@ -318,10 +447,10 @@ public class GameController {
 
                 game.setMatrix(i - 1, j - 1, btn);
 
-                // Añadir el botón al GridPane
+                // Add the button to the GridPane
                 gridPanePlayer.add(btn, j, i);
 
-                // Recorremos la lista de barcos para pintar en el grid
+                // Iterate through the list of boats to render on the grid
                 for (Boat boat : boats) {
                     int[] position = boat.getPosition();
                     int row = position[0];
@@ -329,28 +458,28 @@ public class GameController {
                     boolean isHorizontal = boat.isHorizontal();
                     int length = boat.getLength();
 
-                    // Iterar sobre las posiciones que ocupa el barco
+                    // Iterate over the positions occupied by the boat
                     for (int k = 0; k < length; k++) {
                         int currentRow = isHorizontal ? row : row + k;
                         int currentCol = isHorizontal ? col + k : col;
 
-                        // Verificar si estamos en la celda correspondiente
+                        // Check if we're on the corresponding cell
                         if (currentRow == i - 1 && currentCol == j - 1) {
-                            // Crear una copia visual del estilo del barco
+                            // Create a visual copy of the boat's style
                             Group boatPartStyle = new Group(boat.getChildren()); // Copiar el estilo
                             boatPartStyle.setScaleX(0.7); // Ajustar escala si es necesario
                             boatPartStyle.setScaleY(0.7);
 
-                            // Establecer el estilo visual en el Pane de barcos (no en el botón)
+                            // Set the visual style on the Ship Pane (not the button)
                             boatPartStyle.setTranslateX(j * 40); // Posicionar basado en la celda
                             boatPartStyle.setTranslateY(i * 40);
 
                             if(!boat.isHorizontal()) {
                                 boatPartStyle.setLayoutY(boatPartStyle.getLayoutY() + 50);
                                 boatPartStyle.setLayoutX(boatPartStyle.getLayoutX() - 50);
-                            }// Posicionar basado en la celda
+                            }// Position based on cell
 
-                            // Añadir el barco al Pane
+                            // Add the boat to the Pane
                             boatsPane.getChildren().add(boatPartStyle);
                         }
                     }
@@ -360,31 +489,38 @@ public class GameController {
     }
 
 
-
+    /**
+     * Handles the functionality of a button when clicked or hovered over.
+     *
+     * @param btn the Button to be configured with click and hover events.
+     * @since 1.0
+     * @see BombTouch#getBombTouch()
+     * @see WaterShot#getWaterShot()
+     */
     public void handleButtonValue(Button btn) {
         btn.setOnMouseClicked(event -> {
             int row = GridPane.getRowIndex(btn) - 1;
             int col = GridPane.getColumnIndex(btn) - 1;
 
-            // Verificar impacto y estado de los barcos
+            // Check for a hit or sunk ship
             checkShipHitAndSunk(btn, row, col);
 
             btn.setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
             btn.setOnMouseClicked(null); // Desactiva el evento después de ejecutarse
             btn.setOnMouseEntered(null);
 
-            // Turno del jugador o de la máquina según el resultado
+            // Player's or machine's turn based on the result
             if (Objects.equals(btn.getText(), "0")) {
                 game.shootingMachine(boats, playerBoard);
                 machineShipsSunken = game.getDestroyedBoatsCount(boats, playerBoard);
                 machineShipsSunkenLabel.setText(String.valueOf(machineShipsSunken));
             }
 
-            // SI EL TEXTO DEL BOTON PRESIONADO ES "0" ENTONCES
-            // -> DISPARAR MAQUINA ALEATORIAMENTE
-            // SINO VUELVE A TIRAR EL JUGADOR Y ADEMAS SE EJECUTA UN METODO DE VERIFICA SI UN BARCO HA SIDO
-            // DESTRUIDO Y OTRO METODO QUE VERIFIQUE SI HA DERRIBADO TODOS LOS BARCOS "RECORRE EL ARREGLO
-            // Y SI NO HAY BOTONES CON TEXTO 1 ENTONCES HA GANADO EL JUEGO"
+            // IF THE TEXT OF THE BUTTON PRESSED IS "0" THEN
+            // -> SHOOT MACHINE RANDOMLY
+            // ELSE THE PLAYER THROWS AGAIN AND ALSO A METHOD IS EXECUTED TO VERIFY IF A BOAT HAS BEEN
+            // DESTROYED AND ANOTHER METHOD THAT CHECKS IF YOU HAVE SHOT DOWN ALL THE SHIPS "RIDE THE ARRANGEMENT
+            // AND IF THERE ARE NO BUTTONS WITH TEXT 1 THEN YOU HAVE WON THE GAME"
         });
         btn.setOnMouseEntered(event -> {
             btn.getStylesheets().add(String.valueOf(getClass().getResource("/com/battleship/battleshipfpoe/css/styles-game.css")));
@@ -395,30 +531,47 @@ public class GameController {
         });
     }
 
-
+    /**
+     * Checks if a shot hits a ship and handles the ship sinking logic.
+     * If the shot hits a ship, the ship is marked as hit, and if the ship is sunk,
+     * the respective cells are updated visually to show the damage.
+     * The method also checks if all of the player's ships have been sunk,
+     * triggering the game over sequence if all ships are destroyed.
+     *
+     * @param btn the Button representing the shot taken by the player.
+     * @param row the row index of the shot on the grid.
+     * @param col the column index of the shot on the grid.
+     * @since 1.0
+     * @see Boat
+     * @see MachineBoard
+     * @see BombTouch#getBombTouch()
+     * @see WaterShot#getWaterShot()
+     * @throws IllegalArgumentException if the shot coordinates are outside of the valid grid bounds.
+     * @deprecated This method is deprecated due to a planned update in the game's event handling system.
+     */
     public void checkShipHitAndSunk(Button btn, int row, int col) {
         for (Boat boat : machineBoard.getBoats()) {
             System.out.println("Boat: "+ boat.getName() + " "+ Arrays.toString(boat.getPosition()));
-            // Obtener posición y orientación del barco
+            // Get boat's position and orientation
             int[] position = boat.getPosition();
             int boatRow = position[0];
             int boatCol = position[1];
             boolean isHorizontal = boat.isHorizontal();
             int length = boat.getLength();
 
-            // Verificar si el disparo impacta en el barco
+            // Check if the shot hits the boat
             for (int i = 0; i < length; i++) {
                 int currentRow = isHorizontal ? boatRow : boatRow + i;
                 int currentCol = isHorizontal ? boatCol + i : boatCol;
 
                 if (currentRow == row && currentCol == col) {
-                    // Registrar impacto en el barco
+                    // Register the impact on the boat
                     boat.markHit(i);
 
-                    // Cambiar el gráfico del botón al impacto
+                    // Change the button graphic to show the hit
                     btn.setGraphic(bombTouch.getBombTouch());
 
-                    // Verificar si el barco está completamente destruido
+                    // Check if the boat is completely destroyed (sunk)
                     if (boat.isSunk()) {
                         for (int j = 0; j < length; j++) {
                             int sunkRow = isHorizontal ? boatRow : boatRow + j;
@@ -441,32 +594,46 @@ public class GameController {
                         }
 
                     }
-                    return; // No es necesario verificar más barcos
+                    return; // No need to check more boats
                 }
             }
         }
 
-        // Si no impactó en ningún barco, mostrar agua
+        // If no ship is hit, show water effect
         btn.setGraphic(waterShot.getWaterShot());
-        // Verificar si la máquina ha ganado
+        // Check if the machine has won
         if (machineShipsSunken == 10) {
             showGameOverMessage("¡Has perdido!");
-            blockButtons(); // Bloquear los botones
+            blockButtons(); // Disable all buttons
             GameStage.deleteInstance();
             WelcomeStage.getInstance();
         }
     }
 
+    /**
+     * Displays a "Game Over" message dialog with the provided text.
+     * This method creates and displays a custom dialog that shows the result of the game (win/lose).
+     * The dialog includes a styled message and a "Close" button to end the game session.
+     *
+     * @param message the message to display in the "Game Over" dialog, typically indicating win/lose status.
+     * @since 1.0
+     * @see Dialog
+     * @see VBox
+     * @see Button
+     * @throws NullPointerException if the message parameter is null.
+     * @serial Updates the game’s final state, including displaying the game over message in the dialog.
+     * @deprecated This method is deprecated as the game’s user interface may transition to a different form of messaging.
+     */
     private void showGameOverMessage(String message) {
-        // Crear el diálogo
+        // Set the style of the dialog
         Dialog<Void> dialog = new Dialog<>();
         dialog.setTitle("Fin del Juego");
 
-        // Establecer el estilo del diálogo
+        // Create a container for the message
         dialog.getDialogPane().getStylesheets().add(getClass().getResource("/com/battleship/battleshipfpoe/css/styles-game-over.css").toExternalForm());
         dialog.getDialogPane().getStyleClass().add("game-over-dialog");
 
-        // Crear un contenedor para el mensaje
+        // Create the Label with the message
         VBox vbox = new VBox();
         vbox.setSpacing(20);
         vbox.setStyle("-fx-alignment: center;");
@@ -475,24 +642,35 @@ public class GameController {
         Label messageLabel = new Label(message);
         messageLabel.setStyle("-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #ff0000; -fx-alignment: center;");
 
-        // Añadir el Label al contenedor
+        // Add the container to the dialog
         vbox.getChildren().add(messageLabel);
 
-        // Agregar el contenedor al diálogo
+        // Add the container to the dialog
         dialog.getDialogPane().setContent(vbox);
 
-        // Crear y estilizar el botón de "Cerrar"
+        // Create and style the "Close" button
         Button closeButton = new Button("Cerrar");
         closeButton.setStyle("-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-size: 14px;");
         closeButton.setOnAction(event -> dialog.close());
         dialog.getDialogPane().getButtonTypes().clear();
         dialog.getDialogPane().getButtonTypes().add(ButtonType.CLOSE);
 
-        // Mostrar el diálogo
+        // Show the dialog
         dialog.showAndWait();
     }
 
-
+    /**
+     * Disables all buttons on the game board to prevent further actions after the game is over or during certain game states.
+     * This method iterates through all buttons stored in the `buttonList` and disables them to block user interaction.
+     *
+     * @since 1.0
+     * @see Button
+     * @see GameStage
+     * @see WelcomeStage
+     * @throws IllegalStateException if the buttons cannot be disabled due to an invalid state.
+     * @deprecated This method is deprecated as the game now uses a more dynamic approach to manage button states.
+     * @serial Updates the button state in the game to reflect whether interaction is allowed.
+     */
     private void blockButtons() {
         for (Button btn : buttonList) {
             btn.setDisable(true); // Deshabilitar el botón
@@ -501,7 +679,14 @@ public class GameController {
 
 
 
-
+    /**
+     * Handles the action when a cell (button) is pressed, showing water or bomb effects based on the button value.
+     *
+     * @param btn the Button pressed by the user.
+     * @since 1.0
+     * @see WaterShot
+     * @see BombTouch
+     */
     public void pressedCell(Button btn){
         String value = btn.getText();
         if(value.equals("0")){
@@ -514,8 +699,16 @@ public class GameController {
         }
     }
 
-    // Función que oculta o muestra las casillas del GridPane de la maquina
-    // Manejo del cambio de visibilidad del tablero de la máquina.
+    // Function that hides or shows the GridPane boxes of the machine
+    // Handling the change of visibility of the machine dashboard.
+    /**
+     * Toggles the visibility of the machine's game board based on user interaction.
+     * Changes the button's image and grid visibility between show and hide.
+     *
+     * @param event the ActionEvent triggered by the user.
+     * @since 1.0
+     * @see Button
+     */
     @FXML
     public void showMachineBoard(ActionEvent event) {
         if (!buttonShowPressed) {
@@ -525,7 +718,7 @@ public class GameController {
                 placeShipsOnGrid(gridPaneMachine);
                 buttonShowPressed = true;
             } catch (RuntimeException e) {
-                // EXCEPCIÓN NO MARCADA: Maneja errores al cambiar visibilidad.
+                // UNCHECKED EXCEPTION: Handle errors when changing visibility.
                 System.err.println("Error cambiando la visibilidad del tablero: " + e.getMessage());
             } catch (PlacementException e) {
                 throw new RuntimeException(e);
@@ -538,18 +731,35 @@ public class GameController {
         }
     }
 
+    /**
+     * Sets the image on the show/hide button and updates its label text.
+     *
+     * @param url the URL to the image to be set.
+     * @param message the message to be shown on the label.
+     * @since 1.0
+     * @throws IllegalArgumentException if the image resource is not found.
+     */
     public void setImageButtonShow(String url, String message) {
         try {
-            // EXCEPCIÓN MARCADA: Manejo de recursos gráficos (como imágenes).
+            // CHECKED EXCEPTION: Handling of graphic resources (such as images).
             Image image = new Image(getClass().getResource(url).toExternalForm());
             imageShow.setImage(image);
             labelShow.setText(message);
         } catch (Exception e) {
-            // Registra el error pero no interrumpe el juego.
+            // Logs the error but does not interrupt the game.
             System.err.println("Error cambiando la imagen del botón: " + e.getMessage());
         }
     }
 
+    /**
+     * Changes the visibility of the machine's grid and updates button styles accordingly.
+     *
+     * @param url the URL to the CSS stylesheet for the grid.
+     * @param css1 the first CSS class to apply.
+     * @param css2 the second CSS class to apply.
+     * @since 1.0
+     * @see Button
+     */
     public void showHideMachineGridPane(String url, String css1, String css2){
         //Button[][] matrixButtons = machineBoard.getMatrixButtons();
         for(int i=0; i<10; i++){
@@ -562,12 +772,19 @@ public class GameController {
         }
     }
 
+    /**
+     * Handles the key typed event to allow only valid characters in the text field.
+     *
+     * @param event the KeyEvent triggered when a key is typed.
+     * @since 1.0
+     * @see TextField
+     */
     private StringBuilder inputText = new StringBuilder();
     @FXML
     public void onKeyTyped(KeyEvent event) {
         String character = event.getCharacter();
 
-        // Concatenar el carácter al StringBuilder si es válido
+        // Concatenate the character to the StringBuilder if valid
         if (character.matches("[a-zA-Z0-9 ]")) { // Permitir letras, números y espacios
             inputText.setLength(0); // Limpiar el contenido previo
             inputText.append(textFieldName.getText());
@@ -576,6 +793,14 @@ public class GameController {
         }
     }
 
+    /**
+     * Handles the click event to save the player's nickname and ships destroyed count to a file.
+     * Then transitions to the WelcomeStage.
+     *
+     * @since 1.0
+     * @see PlaneTextFileHandler
+     * @see WelcomeStage
+     */
     @FXML
     public void handleClickExit(){
         player.setNickname(textFieldName.getText());
