@@ -13,6 +13,7 @@
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
@@ -40,7 +41,7 @@
                         <Image url="@images/user-game.png" />
                      </image>
                   </ImageView>
-                  <TextField alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="31.0" prefWidth="108.0" styleClass="label-Game" text="JUGADOR" />
+                  <TextField fx:id="textFieldName" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="31.0" prefWidth="108.0" styleClass="label-Game" text="JUGADOR" />
                </children>
             </VBox>
             <VBox alignment="CENTER" prefHeight="181.0" prefWidth="178.0">
@@ -53,7 +54,7 @@
                         <Insets bottom="10.0" />
                      </VBox.margin>
                   </Label>
-                  <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="30.0" prefWidth="30.0" styleClass="label-Game" stylesheets="@css/styles-game.css" text="0" textAlignment="CENTER">
+                  <Label fx:id="playerShipsSunkenLabel" alignment="CENTER" contentDisplay="CENTER" prefHeight="30.0" prefWidth="30.0" styleClass="label-Game" stylesheets="@css/styles-game.css" text="0" textAlignment="CENTER">
                      <font>
                         <Font name="Bebas Neue Regular" size="20.0" />
                      </font>
@@ -74,7 +75,7 @@
                         <String fx:value="label-Machine" />
                      </styleClass>
                   </Label>
-                  <Label alignment="CENTER" prefHeight="30.0" prefWidth="30.0" stylesheets="@css/styles-game.css" text="0">
+                  <Label fx:id="machineShipsSunkenLabel" alignment="CENTER" prefHeight="30.0" prefWidth="30.0" stylesheets="@css/styles-game.css" text="0">
                      <font>
                         <Font name="Bebas Neue Regular" size="20.0" />
                      </font>
@@ -111,7 +112,7 @@
                <children>
                   <HBox alignment="TOP_CENTER" prefHeight="458.0" prefWidth="1213.0">
                      <children>
-                        <GridPane fx:id="gridPane1" alignment="CENTER" gridLinesVisible="true" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="440.0" prefWidth="440.0" style="-fx-border-color: #000;" styleClass="gridPane-Game" stylesheets="@css/styles-game.css">
+                        <GridPane fx:id="gridPanePlayer" alignment="CENTER" gridLinesVisible="true" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="440.0" prefWidth="440.0" style="-fx-border-color: #000;" styleClass="gridPane-Game" stylesheets="@css/styles-game.css">
                            <columnConstraints>
                               <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                               <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -165,7 +166,7 @@
                               <Insets left="170.0" />
                            </HBox.margin>
                         </GridPane>
-                        <GridPane fx:id="gridPane" alignment="CENTER" gridLinesVisible="true" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="440.0" prefWidth="440.0" style="-fx-border-color: #000;" styleClass="gridPane-Game" stylesheets="@css/styles-game.css">
+                        <GridPane fx:id="gridPaneMachine" alignment="CENTER" gridLinesVisible="true" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="440.0" prefWidth="440.0" style="-fx-border-color: #000;" styleClass="gridPane-Game" stylesheets="@css/styles-game.css">
                            <columnConstraints>
                               <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                               <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -226,12 +227,12 @@
                   </HBox>
                   <VBox alignment="TOP_CENTER" prefHeight="483.0" prefWidth="130.0">
                      <children>
-                        <Button contentDisplay="GRAPHIC_ONLY" mnemonicParsing="false" prefHeight="60.0" prefWidth="77.0" styleClass="button-show" stylesheets="@css/styles-game.css" text="Mostrar" textFill="WHITE">
+                        <Button contentDisplay="GRAPHIC_ONLY" mnemonicParsing="false" onAction="#showMachineBoard" prefHeight="60.0" prefWidth="77.0" styleClass="button-show" stylesheets="@css/styles-game.css" text="Mostrar" textFill="WHITE">
                            <VBox.margin>
                               <Insets top="20.0" />
                            </VBox.margin>
                            <graphic>
-                              <ImageView fitHeight="53.0" fitWidth="55.0" pickOnBounds="true" preserveRatio="true">
+                              <ImageView fx:id="imageShow" fitHeight="53.0" fitWidth="55.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
                                     <Image url="@images/icon-show.png" />
                                  </image>
@@ -241,7 +242,7 @@
                               <Cursor fx:constant="HAND" />
                            </cursor>
                         </Button>
-                        <Label text="MOSTRAR" textFill="WHITE">
+                        <Label fx:id="labelShow" text="MOSTRAR" textFill="WHITE">
                            <VBox.margin>
                               <Insets bottom="40.0" />
                            </VBox.margin>
@@ -249,11 +250,11 @@
                               <Font name="Century Gothic" size="12.0" />
                            </font>
                         </Label>
-                        <ImageView fitHeight="45.0" fitWidth="45.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@images/icon-x.png" />
-                           </image>
-                        </ImageView>
+                        <Pane fx:id="water" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="50.0" prefWidth="50.0">
+                           <VBox.margin>
+                              <Insets left="15.0" />
+                           </VBox.margin>
+                        </Pane>
                         <Label text="AGUA" textFill="WHITE">
                            <VBox.margin>
                               <Insets bottom="40.0" />
@@ -262,11 +263,11 @@
                               <Font name="Century Gothic" size="12.0" />
                            </font>
                         </Label>
-                        <ImageView fitHeight="45.0" fitWidth="45.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@images/icon-bomb.png" />
-                           </image>
-                        </ImageView>
+                        <Pane fx:id="bomb" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="50.0" prefWidth="50.0">
+                           <VBox.margin>
+                              <Insets left="15.0" />
+                           </VBox.margin>
+                        </Pane>
                         <Label text="TOCADO" textFill="WHITE">
                            <VBox.margin>
                               <Insets bottom="40.0" />
@@ -275,11 +276,11 @@
                               <Font name="Century Gothic" size="12.0" />
                            </font>
                         </Label>
-                        <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@images/icon-fire.png" />
-                           </image>
-                        </ImageView>
+                        <Pane fx:id="fire" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="50.0" prefWidth="50.0">
+                           <VBox.margin>
+                              <Insets left="15.0" />
+                           </VBox.margin>
+                        </Pane>
                         <Label text="HUNDIDO" textFill="WHITE">
                            <font>
                               <Font name="Century Gothic" size="12.0" />
@@ -326,16 +327,6 @@
                   </Label>
                </children>
             </GridPane>
-            <Button layoutX="1034.0" layoutY="52.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="74.0" text="JUGAR">
-               <font>
-                  <Font size="16.0" />
-               </font>
-               <cursor>
-                  <Cursor fx:constant="HAND" />
-               </cursor>
-            </Button>
-            <Button fx:id="buttonCarrier" layoutX="234.0" layoutY="38.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="155.0" />
-            <Button fx:id="buttonSubmarine" layoutX="420.0" layoutY="38.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="155.0" />
          </children>
       </AnchorPane>
    </children>

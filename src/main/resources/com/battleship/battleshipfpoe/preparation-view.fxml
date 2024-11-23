@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0" styleClass="anchorPane" stylesheets="@css/styles-preparation.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.battleship.battleshipfpoe.controller.PreparationController">
+    <children>
+        <AnchorPane fx:id="BoardPane" layoutX="90.0" layoutY="64.0" prefHeight="572.0" prefWidth="544.0" />
+        <Pane fx:id="BoatPane" layoutX="873.0" layoutY="49.0" prefHeight="622.0" prefWidth="363.0" style="-fx-background-color: #9fbfbd;">
+         <children>
+              <Button layoutX="62.0" layoutY="554.0" mnemonicParsing="false" onAction="#handleNextButton" prefHeight="46.0" prefWidth="240.0" text="Ir a la partida">
+                  <font>
+                      <Font size="21.0" />
+                  </font>
+              </Button>
+         </children></Pane>
+      <Label layoutX="113.0" layoutY="671.0" text="Mientras arrastras un barco presiona R para rotarlo" textFill="WHITE">
+         <font>
+            <Font name="System Bold" size="23.0" />
+         </font>
+      </Label>
+    </children>
+</AnchorPane>
