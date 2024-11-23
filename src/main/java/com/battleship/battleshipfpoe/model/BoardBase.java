@@ -5,7 +5,7 @@ import javafx.scene.layout.AnchorPane;
 
 import java.util.ArrayList;
 
-public abstract class BoardBase {
+public abstract class BoardBase implements IBoardBase{
 
     private final double planeWidth;
     private final double planeHeight;

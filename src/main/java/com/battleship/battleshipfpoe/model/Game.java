@@ -3,6 +3,7 @@ package com.battleship.battleshipfpoe.model;
 import com.battleship.battleshipfpoe.view.BombTouch;
 import com.battleship.battleshipfpoe.view.ShipSunk;
 import com.battleship.battleshipfpoe.view.WaterShot;
+import javafx.fxml.Initializable;
 import javafx.scene.Group;
 import javafx.scene.control.Button;
 import javafx.scene.control.ContentDisplay;
@@ -11,7 +12,7 @@ import javafx.scene.control.ContentDisplay;
 import java.util.List;
 import java.util.Random;
 
-public class Game {
+public class Game implements IGame{
     private final Button[][] matrix;
     private WaterShot waterShot;
     private BombTouch bombTouch;
@@ -112,7 +113,7 @@ public class Game {
     }
 
     // Metodo para verificar si el disparo es válido
-    private void checkIfShotIsValid(int row, int col, PlayerBoard playerBoard) throws InvalidShotException {
+    public void checkIfShotIsValid(int row, int col, PlayerBoard playerBoard) throws InvalidShotException {
         int playerBoardShotValue = playerBoard.getMatrixPlayer().get(row).get(col);
 
         // Si la celda ya fue atacada, lanzamos la excepción
@@ -121,20 +122,20 @@ public class Game {
         }
     }
 
-    private boolean handleShot(int row, int col, PlayerBoard playerBoard) {
+    public boolean handleShot(int row, int col, PlayerBoard playerBoard) {
         List<List<Integer>> matrix = playerBoard.getMatrixPlayer();
         boolean isABoatThere = (matrix.get(row).get(col) == 1);
         matrix.get(row).set(col, 2); // Marca la celda como disparada
         return isABoatThere;
     }
 
-    private void updateCellGraphic(int row, int col, boolean hit) {
+    public void updateCellGraphic(int row, int col, boolean hit) {
         Button btn = matrix[row][col];
         btn.setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
         Group graphic = hit ? bombTouch.getBombTouch() : waterShot.getWaterShot();
         btn.setGraphic(graphic);
     }
-    private void checkAndMarkDestroyedBoats(List<Boat> boats, PlayerBoard playerBoard) {
+    public void checkAndMarkDestroyedBoats(List<Boat> boats, PlayerBoard playerBoard) {
         List<List<Integer>> matrix = playerBoard.getMatrixPlayer();
 
         for (Boat boat : boats) {
@@ -150,7 +151,7 @@ public class Game {
         }
     }
 
-    private boolean isBoatDestroyed(Boat boat, List<List<Integer>> matrix) {
+    public boolean isBoatDestroyed(Boat boat, List<List<Integer>> matrix) {
         int row = boat.getPosition()[0];
         int col = boat.getPosition()[1];
 
@@ -165,7 +166,7 @@ public class Game {
         return true;
     }
 
-    private void markDestroyedBoat(Boat boat, List<List<Integer>> matrixPlayer) {
+    public void markDestroyedBoat(Boat boat, List<List<Integer>> matrixPlayer) {
         int row = boat.getPosition()[0];
         int col = boat.getPosition()[1];
 
