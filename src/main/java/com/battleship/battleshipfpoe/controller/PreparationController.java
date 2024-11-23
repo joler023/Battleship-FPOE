@@ -75,6 +75,13 @@ public class PreparationController implements Initializable {
 
     private final Map<Boat, int[]> boatPositionsMap = new HashMap<Boat, int[]>();
 
+    /**
+     * Initializes the preparation controller, setting up the board and positioning the boats.
+     *
+     * @param url the location of the FXML resource.
+     * @param resourceBundle the resources for the FXML.
+     * @throws IllegalStateException if the FXML resource is invalid or unavailable.
+     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         initializeBoard();
@@ -82,46 +89,46 @@ public class PreparationController implements Initializable {
         planeTextFileHandler = new PlaneTextFileHandler();
         gameController = new GameController();
 
-        // Separación entre los barcos
-        int horizontalSpacing = 80; // Espaciado horizontal entre barcos
-        int verticalSpacing = 100;  // Espaciado vertical entre filas
+        // Separation between boats
+        int horizontalSpacing = 80; // Horizontal spacing between boats
+        int verticalSpacing = 100;  // Vertical spacing between rows
 
-        // Crear Fragatas
+        // Create Frigates
         ArrayList<Boat> fragates = new ArrayList<>();
 
         int firstBoatXPosition = 20;
         int firstBoatYPosition = 50;
 
-        // Creación de Fragatas con espaciado horizontal
+        // Creating Frigates with horizontal spacing
         for (int i = 0; i < 4; i++) {
             fragates.add(new Boat( "Fragata", firstBoatXPosition + (i * horizontalSpacing), firstBoatYPosition, 1, true, new Frigate().getFrigate()));
         }
 
         ArrayList<Boat> destroyers = new ArrayList<>();
 
-        // Creación de Destroyers con espaciado horizontal
+        // Creating Destroyers with horizontal spacing
         for (int i = 0; i < 3; i++) {
             destroyers.add(new Boat("Destructor",firstBoatXPosition + (i * (horizontalSpacing + 30)), firstBoatYPosition + verticalSpacing, 2, true, new Destroyer().getDestroyer()));
         }
 
         ArrayList<Boat> submarines = new ArrayList<>();
 
-        // Creación de Submarines con espaciado horizontal
+        // Creating Submarines with horizontal spacing
         for (int i = 0; i < 2; i++) {
             submarines.add(new Boat("Submarino",firstBoatXPosition + (i * (horizontalSpacing +100)), firstBoatYPosition + (2 * verticalSpacing), 3, true, new Submarine().getSubmarine()));
         }
 
-        // Añadir Fragatas al panel
+        // Adding Frigates to the panel
         for (Boat fragate : fragates) {
             addBoatToPane(fragate);
         }
 
-        // Añadir Destroyers al panel
+        // Adding Destroyers to the panel
         for (Boat destroyer : destroyers) {
             addBoatToPane(destroyer);
         }
 
-        // Añadir Submarines al panel
+        // Adding Submarines to the panel
         for (Boat submarine : submarines) {
             addBoatToPane(submarine);
         }
@@ -129,7 +136,11 @@ public class PreparationController implements Initializable {
         addBoatToPane(new Boat("Portaviones",firstBoatXPosition, firstBoatYPosition + (3 * verticalSpacing), 4, true, new AircraftCarrier().getAircraftCarrier()));
     }
 
-
+    /**
+     * Initializes the board by setting dimensions and updating the grid.
+     *
+     * @see BoardHandler
+     */
     private void initializeBoard() {
         double planeWidth = 600;
         double planeHeight = 600;
@@ -141,6 +152,13 @@ public class PreparationController implements Initializable {
         boardHandler.updateGrid(false);
     }
 
+    /**
+     * Adds a boat to the pane and sets up its drag-and-drop functionality.
+     *
+     * @param boat the boat object to be added to the pane.
+     * @see Boat
+     * @since 1.0
+     */
     private void addBoatToPane(Boat boat) {
         setupDragAndDrop(boat);
         BoatPane.getChildren().add(boat);
@@ -148,6 +166,16 @@ public class PreparationController implements Initializable {
         boat.requestFocus();
     }
 
+    /**
+     * Snaps a boat to the nearest grid cell based on its current position and orientation.
+     * If the position is invalid, the boat reverts to its initial position.
+     *
+     * @param boat the boat object to be snapped to the grid.
+     * @param event the mouse event that triggered the snap action.
+     * @param initialPosition the initial position of the boat before snapping.
+     * @see BoardHandler
+     * @since 1.0
+     */
     private void snapToGrid(Boat boat, MouseEvent event, double[] initialPosition) {
         double boardX = BoardPane.localToScene(BoardPane.getBoundsInLocal()).getMinX();
         double boardY = BoardPane.localToScene(BoardPane.getBoundsInLocal()).getMinY();
@@ -159,10 +187,10 @@ public class PreparationController implements Initializable {
         int col = (int) (newX / tileWidth);
         int row = (int) (newY / tileHeight);
 
-        // Ajustar el 'snap' de acuerdo a la orientación del barco
+        // Adjust snap behavior based on boat orientation
         if (boat.isRotated()) {
-            col = (int) (newX / tileHeight); // Invertir el cálculo para la orientación vertical
-            row = (int) (newY / tileWidth);  // Invertir el cálculo para la orientación vertical
+            col = (int) (newX / tileHeight); // Inverted calculation for vertical orientation
+            row = (int) (newY / tileWidth);  // Inverted calculation for vertical orientation
         }
 
 
@@ -173,14 +201,14 @@ public class PreparationController implements Initializable {
 
 
 
-            // Si ya estaba snappeado y cambió de orientación, limpiar posición previa
+            // If it was already snapped and changed orientation, clear previous position
             if (wasSnapped && boat.isRotated() != initialOrientation[0]) {
-                boat.clearBoatPosition(boardHandler, initialOrientation[0]); // Borra usando orientación previa
+                boat.clearBoatPosition(boardHandler, initialOrientation[0]); // Erase using previous orientation
             }
 
 
             switch(boat.getLength()){
-                case 1: // Actualizar la posición después de la rotación
+                case 1: // Update position after rotation
                     boat.setLayoutX((col * tileWidth) + 10);
                     boat.setLayoutY((row * tileHeight) + 10);
                     break;
@@ -213,7 +241,7 @@ public class PreparationController implements Initializable {
                     break;
             }
 
-            // Actualizar el estado de la posición
+            // Update position status
             boat.storePosition(row, col);
             boatPositionsMap.put(boat, new int[]{row, col});
             boat.updateBoatPosition(boardHandler);
@@ -227,7 +255,7 @@ public class PreparationController implements Initializable {
             return;
         }
 
-        // Si la posición no es válida, revertir
+        // If position is invalid, revert
         boat.setLayoutX(initialPosition[0]);
         boat.setLayoutY(initialPosition[1]);
 
@@ -243,7 +271,14 @@ public class PreparationController implements Initializable {
         }
     }
 
-
+    /**
+     * Sets up drag-and-drop functionality for a boat, allowing users to move boats
+     * across the board and validate their placement upon release.
+     *
+     * @param boat the boat object to be configured for drag-and-drop actions.
+     * @see Boat
+     * @since 1.0
+     */
     private void setupDragAndDrop(Boat boat) {
         final double[] initialPosition = new double[2];
         final double[] mouseOffset = new double[2];
@@ -256,7 +291,7 @@ public class PreparationController implements Initializable {
             mouseOffset[0] = event.getSceneX() - boat.getLayoutX();
             mouseOffset[1] = event.getSceneY() - boat.getLayoutY();
             boat.toFront();
-            boat.requestFocus(); // Asegura que el barco recibe el enfoque
+            boat.requestFocus(); // Ensures the boat receives keyboard focus.
             boat.clearBoatPosition(boardHandler, initialOrientation[0]);
             boardHandler.printBoard();
         });
@@ -265,9 +300,9 @@ public class PreparationController implements Initializable {
             double newX = event.getSceneX() - mouseOffset[0];
             double newY = event.getSceneY() - mouseOffset[1];
 
-            // Si el barco está rotado, debes ajustar la posición
+            // Adjust position for rotated boats.
             if (boat.isRotated()) {
-                // Calcular la nueva posición tomando en cuenta la rotación
+                // Calculate the new position taking into account the rotation
                 newX = event.getSceneX() - mouseOffset[0];
                 newY = event.getSceneY() - mouseOffset[1];
             }
@@ -280,28 +315,28 @@ public class PreparationController implements Initializable {
 
         boat.setOnKeyPressed(event -> {
             if (beingDragged && event.getCode() == KeyCode.R) {
-                // Guardamos la posición inicial
+                // We save the initial position
                 double oldX = boat.getLayoutX();
                 double oldY = boat.getLayoutY();
 
-                // Realizar la rotación
+                // Rotates the boat.
                 boat.rotate();
                 boat.setRotated(boat.isRotated());
 
-                // Calcular el desplazamiento del barco debido a la rotación
+                // Adjust position after rotation to maintain mouse alignment.
                 double offsetX = oldX - boat.getLayoutX();
                 double offsetY = oldY - boat.getLayoutY();
 
-                // Después de la rotación, ajustar la posición para que el barco quede bajo el clic
-                boat.setLayoutX(oldX - offsetX); // Mantener la posición en X
-                boat.setLayoutY(oldY - offsetY); // Mantener la posición en Y
+                // After rotation, adjust the position so that the ship is under the click
+                boat.setLayoutX(oldX - offsetX); // Maintain position in X
+                boat.setLayoutY(oldY - offsetY); // Maintain position in Y
 
-                boat.toFront(); // Asegurarse de que el barco quede sobre otros elementos
+                boat.toFront(); // Brings the boat to the front of the pane.
             }
         });
 
         boat.setOnMouseReleased(event -> {
-            // Realizar la validación al soltar el barco después de arrastrarlo
+            // Event handler for when the mouse is released after dragging.
             snapToGrid(boat, event, initialPosition);
             boat.toFront();
             System.out.println("-------------------");
@@ -313,7 +348,16 @@ public class PreparationController implements Initializable {
         boat.setFocusTraversable(true); // Habilita el enfoque del barco para recibir eventos de teclado
     }
 
-
+    /**
+     * Validates if the placement of a boat is valid based on its position and orientation.
+     *
+     * @param boat the boat to be validated.
+     * @param col the column where the boat is placed.
+     * @param row the row where the boat is placed.
+     * @return true if the placement is valid, false otherwise.
+     * @since 1.0
+     * @see BoardHandler
+     */
     private boolean ValidPlacement(Boat boat, int col, int row) {
         int boatSize = boat.getLength();
 
@@ -324,24 +368,58 @@ public class PreparationController implements Initializable {
         }
     }
 
-
+    /**
+     * Adds a boat to the list of boats.
+     *
+     * @param boat the boat to be added.
+     * @since 1.0
+     * @see Boat
+     */
     public void addBoat(Boat boat) {
         boats.add(boat);
     }
 
+    /**
+     * Checks if the horizontal placement of a boat is valid within the board's boundaries.
+     *
+     * @param col the column where the boat starts.
+     * @param row the row where the boat is placed.
+     * @param boatSize the size of the boat.
+     * @return true if the placement is valid, false otherwise.
+     * @since 1.0
+     */
 
     private boolean isValidHorizontalPlacement(int col, int row, int boatSize) {
-        // Verificar que el barco no se desborde en la dirección horizontal
+        // Check that the boat does not overflow in the horizontal direction
         return col >= 0 && col + boatSize <= boardHandler.getGridSize();
     }
 
+    /**
+     * Checks if the vertical placement of a boat is valid within the board's boundaries.
+     *
+     * @param col the column where the boat is placed.
+     * @param row the row where the boat starts.
+     * @param boatSize the size of the boat.
+     * @return true if the placement is valid, false otherwise.
+     * @since 1.0
+     */
     private boolean isValidVerticalPlacement(int col, int row, int boatSize) {
-        // Verificar que el barco no se desborde en la dirección vertical
+        // Check that the boat does not overflow in the vertical direction
         return row >= 0 && row + boatSize <= boardHandler.getGridSize();
     }
 
+    /**
+     * Verifies if the cells for a horizontal boat placement are free.
+     *
+     * @param col the starting column of the boat.
+     * @param row the row where the boat is placed.
+     * @param boatSize the size of the boat.
+     * @return true if the cells are available, false otherwise.
+     * @since 1.0
+     * @see BoardHandler
+     */
     private boolean areCellsAvailableForHorizontal(int col, int row, int boatSize) {
-        // Verificar que las celdas en la fila estén libres para el barco horizontal
+        // Check that the cells in the row are free for the horizontal ship
         for (int i = 0; i < boatSize; i++) {
             if (!boardHandler.isWithinBounds(row, col + i) || boardHandler.getCell(row, col + i) == 1) {
                 return false;
@@ -350,8 +428,18 @@ public class PreparationController implements Initializable {
         return true;
     }
 
+    /**
+     * Verifies if the cells for a vertical boat placement are free.
+     *
+     * @param col the column where the boat is placed.
+     * @param row the starting row of the boat.
+     * @param boatSize the size of the boat.
+     * @return true if the cells are available, false otherwise.
+     * @since 1.0
+     * @see BoardHandler
+     */
     private boolean areCellsAvailableForVertical(int col, int row, int boatSize) {
-        // Verificar que las celdas en la columna estén libres para el barco vertical
+        // Check that the cells in the column are free for the vertical ship
         for (int i = 0; i < boatSize; i++) {
             if (!boardHandler.isWithinBounds(row + i, col) || boardHandler.getCell(row + i, col) == 1) {
                 return false;
@@ -361,6 +449,15 @@ public class PreparationController implements Initializable {
     }
 
 
+    /**
+     * Handles the event of clicking the "Next" button, transitioning the game to the main stage.
+     *
+     * @param event the action event triggered by clicking the button.
+     * @throws IOException if there is an issue loading the next stage.
+     * @see GameStage
+     * @see PreparationStage
+     * @since 1.0
+     */
     public void handleNextButton(ActionEvent event) {
             Player player = new Player();
             MachineBoard machineBoard = new MachineBoard();
